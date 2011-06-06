@@ -9,13 +9,12 @@ function appctl_getReportType(){ return AppCtl.getReportType() };
 function appctl_getPort()    { return AppCtl.getPort() };
 
 // Track preferences
-AppCtl.db = Titanium.Database.open("MyHat");
+AppCtl.db = Titanium.Database.open("ThereAndThen");
 
 // global notification object
 AppCtl.notification = Titanium.Notification.createNotification(window);
 
 // Factory Defaults
-AppCtl.baseDir = "../../My Hat gps";
 AppCtl.ocReportBy = "xmpp";
 AppCtl.ocPort = "3000";
 AppCtl.ocServer = "greenbean";
@@ -25,21 +24,8 @@ AppCtl.ocDestination = "whathappened";
 
 // Hash for working globals
 AppCtl.hash = new Array();
-AppCtl.uploads = 0;
 
-$(document).ready( MhUi.Loaded );
-
-
-AppCtl.open_file_dialog_callback = function(filenames) {
-  filenames.forEach( function(file) {
-  
-    Titanium.API.log("--------file: " + file); 
-    MhUi.ViewUpload(file);
-    //To Ruby
-    myHat_uploadFile(file);
-  });
-} 
-
+$(document).ready( TaTUi.Loaded );
 
 // Reporting Type
 AppCtl.getReportType = function()

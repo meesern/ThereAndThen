@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<application xmlns="http://ns.adobe.com/air/application/2.6">
+<id>uk.ac.horizon.oc.air.thereandthen</id>
+<versionNumber>0.1</versionNumber>
+<filename>ThereAndThen</filename>
+<initialWindow>
+  <content>index.html</content>
+  <visible>true</visible>
+  <width>980</width>
+  <height>600</height>
+</initialWindow>
+</application>
+

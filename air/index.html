@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="css/dark-hive/jquery-ui-1.8.11.custom.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/thereandthen.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/menu.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/css-buttons.css" type="text/css" media="screen" />
+  <script src="AIRAliases.js"/>
+  <script src="AIRIntrospector.js"/>
+  <script>
+      air_index = {};
+      function visit() {
+	//air.Introspector.Console.log("timer");
+	air_index.mark();
+      };
+        
+  </script>
+  <script type="text/javascript" src="thirdparty_js/jquery-1.5.2.min.js"></script>
+  <script type="text/javascript" src="thirdparty_js/jquery-ui-1.8.11.custom.min.js"></script>
+
+  <script src="js/basename.js"/>
+  <script src="js/index.js"/>
+  <script>
+      air.Introspector.Console.log("foo");
+  </script>
+</head>
+<body>
+<div style="border-top:1px solid #404040">
+  <ul id="menu">
+      <li><a href="#" class="drop">About</a><!-- Begin Home Item -->
+	  <div id="oc-config" class="dropdown_2columns"><!-- Begin 2 columns container -->
+	      <div class="col_1">
+		  <h2>What is this?</h2>
+		  <p>It's a visualisation demon for There and Then</p>
+	      </div>
+      
+	      <div id="oc-config-content" >
+	      </div>
+	  </div>
+      </li>
+  </ul>
+  <div id='inner'>
+      <div id='tracker'></div>
+  </div>
+</div>
+</body>
+</html>

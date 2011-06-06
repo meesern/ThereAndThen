@@ -55,6 +55,24 @@ class OcWitness
     }
   end
 
+  #recover data about an aspect
+  def recover(aspect)
+    #get http://server/reports/<aspect>/
+    ph,pt,pu,pp = html_proxy
+    prox = Net::HTTP::Proxy(ph,pt,pu,pp)
+    puts "Opened Proxy #{prox.inspect}"
+    prox.start(@server, @html_port) do |h|
+      puts "Get"
+      #post2 does not raise exceptions.
+      #aspect id (3) is bogus.
+      response = h.get('/reports/3')
+      puts "got response"
+        
+      puts "done."
+    end
+    puts "On way out"
+  end
+
   def close
     flush
   end

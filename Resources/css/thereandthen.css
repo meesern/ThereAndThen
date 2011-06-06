@@ -1,62 +1,56 @@
+/* #html 5 elements */
+header, section, article {
+  display: block; }
+
+body {
+  background-color: #888888; }
 
 .upview {
-	list-style:none;
-	margin:7px auto 0px auto;
-	padding:0px 20px 0px 20px;
-
-	/* Rounded Corners */
-	
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border-radius: 10px;
-
-	/* Background color and gradients */
-	
-	background: #014464;
-	background: -moz-linear-gradient(top, #0272a7, #013953);
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0272a7), to(#013953));
-	
-	/* Borders */
-	
-	border: 1px solid #002232;
-
-	-moz-box-shadow:inset 0px 0px 1px #edf9ff;
-	-webkit-box-shadow:inset 0px 0px 1px #edf9ff;
-	box-shadow:inset 0px 0px 1px #edf9ff;
-}
+  list-style: none;
+  margin: 7px auto 0px auto;
+  padding: 0px 20px 0px 20px;
+  /* Rounded Corners */
+  border-radius: 10px;
+  /* Background color and gradients */
+  background: #014464;
+  background: -moz-linear-gradient(top, #0272a7, #013953);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0272a7), to(#013953));
+  /* Borders */
+  border: 1px solid #002232;
+  box-shadow: inset 0px 0px 1px #edf9ff; }
 
 .progressbar {
-	height: 1em;
-	margin-bottom: 14px;
-}
+  height: 1em;
+  margin-bottom: 14px; }
 
 #status {
-	color: white;
+  color: white;
+  margin: 7px auto 0px auto;
+  padding: 0px 20px 0px 20px;
+  /* Rounded Corners */
+  border-radius: 10px;
+  /* Background color and gradients */
+  background: #a1a494;
+  /* Borders */
+  border: 1px solid #002232;
+  box-shadow: inset 0px 0px 1px #edf9ff; }
 
-	margin:7px auto 0px auto;
-	padding:0px 20px 0px 20px;
+#inner {
+  padding: 10px; }
 
-	/* Rounded Corners */
-	
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border-radius: 10px;
-
-	/* Background color and gradients */
-	
-	background: #a1a494;
-	
-	/* Borders */
-	
-	border: 1px solid #002232;
-
-	-moz-box-shadow:inset 0px 0px 1px #edf9ff;
-	-webkit-box-shadow:inset 0px 0px 1px #edf9ff;
-	box-shadow:inset 0px 0px 1px #edf9ff;
-}
+#tracker {
+  border: 2px solid white;
+  -moz-border-top-colors: #292929 white;
+  -moz-border-right-colors: #292929 white;
+  -moz-border-bottom-colors: #292929 white;
+  -moz-border-left-colors: #292929 white;
+  -webkit-box-shadow: 0 -1px 2px #292929;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  background: #e3e3e3;
+  background: -moz-linear-gradient(top, #a4a4a4, #e3e3e3);
+  background: -webkit-gradient(linear, left top, left bottom, from(#a4a4a4), to(#e3e3e3)); }
 
 #status p {
-	margin: 0.5em 0;
-}
-
-
+  margin: 0.5em 0; }
