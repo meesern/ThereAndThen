@@ -5,7 +5,7 @@
 #
 
 #Index = this ? exports
-Index = air_index
+Index = air_hook
 
 $(document).ready(->Index.init())
 
