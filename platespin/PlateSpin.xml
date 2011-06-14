@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<application xmlns="http://ns.adobe.com/air/application/2.6">
+<id>uk.ac.horizon.oc.air.platespin</id>
+<versionNumber>0.1</versionNumber>
+<filename>PlateSpin</filename>
+<initialWindow>
+  <content>index.html</content>
+  <visible>true</visible>
+  <width>680</width>
+  <height>481</height>
+</initialWindow>
+</application>
+

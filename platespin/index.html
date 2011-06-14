@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="css/dark-hive/jquery-ui-1.8.11.custom.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/platespin.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/menu.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/css-buttons.css" type="text/css" media="screen" />
+  <script src="AIRAliases.js"/>
+  <script src="AIRIntrospector.js"/>
+  <script>
+      exports = {};
+      /* only needed for setInterval timers
+        function visit() {
+	air.Introspector.Console.log("timer");
+	exports.mark();
+      };
+      */
+        
+  </script>
+  <script src="thirdparty_js/jquery-1.5.2.min.js"></script>
+  <script src="thirdparty_js/jquery-ui-1.8.11.custom.min.js"></script>
+  <script src="thirdparty_js/base64.js"></script>
+  <script src="js/index.js"/>
+  <script src="js/trail.js"/>
+  <script src="js/app.js"/>
+  <script>
+      //air.Introspector.Console.log("foo");
+  </script>
+</head>
+<body>
+<div style="border-top:1px solid #404040">
+  <ul id="menu">
+      <li><a href="#" class="drop">Options</a><!-- Begin Home Item -->
+	  <div id="oc-config" class="dropdown_2columns"><!-- Begin 2 columns container -->
+	      <div class="col_1">
+		  <h2>Configure</h2>
+		<div id="oc-config-content" >
+		</div>
+	      </div>
+	  </div>
+      </li>
+      <li><a href="#" class="drop">Draw</a>
+	  <div class="dropdown_1column">
+	      <div class="col_1">
+		  <p>Draw the data...</p>
+		  <button id = "b1" class="button blue medium">Go</button>
+		  <p>Save an Image...</p>
+		  <button id = "b2" class="button orange medium">Save</button>
+
+	      </div>
+	  </div>
+      </li>
+  </ul>
+  <div id='inner'>
+      <div id='tracker'></div>
+  </div>
+</div>
+</body>
+</html>
