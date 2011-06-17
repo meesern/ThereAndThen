@@ -8,7 +8,7 @@ PSUi.Loaded = function()
     air.trace("*** DOM loaded ***");
 
     //Button click
-    //$('#b1').click(exports.download);
+    $('#b1').click(exports.select);
     $('#b2').click(exports.save);
     
     //Add configuration options

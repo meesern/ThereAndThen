@@ -83,8 +83,7 @@
     canvas.height = Trail.maxY;
     canvas.width = Trail.maxX;
     $('#tracker').append(canvas);
-    Trail.trailtrace = new TrailTrace($('canvas')[0], 'rgb(255,255,255)', canvas.width, canvas.height);
-    return Trail.drawdata();
+    return Trail.trailtrace = new TrailTrace($('canvas')[0], 'rgb(255,255,255)', canvas.width, canvas.height);
   };
   Trail.set_scale = function(xs, ys) {
     var bigx, bigy, canvas_longness, data_longness, smallx, smally, x, xrange, y, yrange, _i, _j, _len, _len2;
@@ -134,6 +133,21 @@
     col = point[4];
     return Trail.trailtrace.squaremark(Trail.xcentering + (x1 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y1 + Trail.yoffset) * Trail.scale, Trail.xcentering + (x2 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y2 + Trail.yoffset) * Trail.scale, col);
   };
+  Trail.select = function() {
+    var f;
+    f = new air.File("/home/meesern/Develpment/teaceremony.xml");
+    try {
+      f.addEventListener(air.Event.SELECT, Trail.openData);
+      return f.browseForOpen("Open");
+    } catch (error) {
+      return air.trace("Open Dialog Failed:", error.message);
+    }
+  };
+  Trail.openData = function(event) {
+    air.trace("Open Dialog opening");
+    Trail.file = event.target;
+    return Trail.drawdata();
+  };
   Trail.save = function() {
     var byte, data, f, strData, _i, _len;
     AppReport("Saving Image");
@@ -181,9 +195,9 @@
     data = Trail.fileload();
     return Trail.parse(data);
   };
-  Trail.fileload = function() {
+  Trail.fileload = function(file) {
     var data, f, fs;
-    f = new air.File("/home/meesern/Develpment/streams.xml");
+    f = Trail.file;
     fs = new air.FileStream;
     fs.open(f, air.FileMode.READ);
     data = new air.ByteArray;

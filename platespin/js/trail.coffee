@@ -83,7 +83,7 @@ Trail.init = ->
   $('#tracker').append(canvas)
   Trail.trailtrace = new TrailTrace($('canvas')[0],'rgb(255,255,255)'
                          canvas.width, canvas.height)
-  Trail.drawdata()
+  #Trail.drawdata()
 
 #find the maximum x and y and figure out the canvas scale
 #receive and array of all x's and and array of all y's
@@ -130,6 +130,18 @@ Trail.markout = (point) ->
   #cannot get coffeescript to handle multiple lines here!
   Trail.trailtrace.squaremark( Trail.xcentering+(x1+Trail.xoffset)*Trail.scale, Trail.ycentering+(y1+Trail.yoffset)*Trail.scale, Trail.xcentering+(x2+Trail.xoffset)*Trail.scale, Trail.ycentering+(y2+Trail.yoffset)*Trail.scale, col)
 
+Trail.select = ->
+  f = new air.File("/home/meesern/Develpment/teaceremony.xml")
+  try
+    f.addEventListener(air.Event.SELECT, Trail.openData)
+    f.browseForOpen("Open")
+  catch error
+    air.trace("Open Dialog Failed:", error.message)
+
+Trail.openData = (event) ->
+  air.trace("Open Dialog opening")
+  Trail.file = event.target 
+  Trail.drawdata()
 
 Trail.save = ->
   AppReport("Saving Image")
@@ -177,8 +189,10 @@ Trail.drawdata = ->
   data = Trail.fileload()
   Trail.parse(data)
 
-Trail.fileload = ->
-  f = new air.File("/home/meesern/Develpment/streams.xml")
+Trail.fileload = (file) ->
+  #f = new air.File("/home/meesern/Develpment/streams.xml")
+  #f = new air.File("/home/meesern/Develpment/teaceremony.xml")
+  f = Trail.file
   fs = new air.FileStream
   fs.open(f,air.FileMode.READ)
   data = new air.ByteArray
