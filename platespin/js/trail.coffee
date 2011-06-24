@@ -4,75 +4,8 @@
 # Compile to javascript with coffee
 #
 
-#Trail = this ? exports
-#Air does not seem to use commonjs
-Trail = exports
-
-class TrailTrace
-  constructor: (canvas, @color, @maxX, @maxY, @maxRadius = 80) ->
-    @ctx = canvas.getContext "2d"
-    @minRadius = 1.5
-    @x = @y = 0
-    @ctx.fillColor = 'rgba(0,0,0,1)'
-    @ctx.fillRect(@x,@y,@maxX,@maxY) 
-    @distance = 0
-
-    @radius = @minRadius
-
-
-  #points must be presented in order
-  #points are in canvas coordinates (pixels)
-  squaremark: (x1, y1, x2, y2, col) ->
-    @ctx.beginPath()
-    @ctx.lineWidth = 2
-    stroke = "hsla(#{col},95%,80%,0.25)"
-    @ctx.strokeStyle = stroke
-    @ctx.fillStyle = "rgba(0,0,0,0)"
-    @ctx.moveTo(x1,y1)
-    @ctx.lineTo(x1,y2)
-    @ctx.lineTo(x2,y2)
-    @ctx.lineTo(x2,y1)
-    @ctx.lineTo(x1,y1)
-    #@ctx.shadowColor = stroke
-    #@ctx.shadowBlur = 4
-    @ctx.stroke()
-    @ctx.fill()
-    @ctx.closePath()
-
-  mark: (x,y) ->
-    dx = x - @x
-    dy = y - @y
-    @x = x
-    @y = y
-    @distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2))
-
-    this.draw()
-
-  draw: ->
-    this.flow()
-    this.stretch()
-    this.circle(@x, @y, @radius) unless @radius == @maxRadius
-
-  flow: ->
-    @radius = @radius * 1.01
-    @radius = @maxRadius if @radius > @maxRadius
-
-  stretch: ->
-    return if @distance < 2
-    strtch = @distance / 10
-    @radius = @radius / (1+strtch)
-    @radius = @minRadius if @radius < @minRadius
-
-  circle: (x,y,r)->
-    #AppReport("circle #{x},#{y},#{r}")
-    @ctx.beginPath()
-    @ctx.strokeStyle = "rgba(255,255,255,0.33)"
-    @ctx.fillStyle = "rgba(80,80,80,0.02)"
-    @ctx.arc(x, y, r, 0, Math.PI * 2, false)
-    @ctx.stroke()
-    @ctx.fill()
-    @ctx.closePath()
-
+#TODO tidy this so it's root= exports ? this and Trail is added to root namespace.  It will make more sense.
+Trail= exports ? this
 
 Trail.init = -> 
   canvas = document.createElement('canvas')
@@ -81,8 +14,8 @@ Trail.init = ->
   canvas.height = Trail.maxY
   canvas.width = Trail.maxX
   $('#tracker').append(canvas)
-  Trail.trailtrace = new TrailTrace($('canvas')[0],'rgb(255,255,255)'
-                         canvas.width, canvas.height)
+  Trail.trailtrace = new Trail.TrailTrace($('canvas')[0],
+                         canvas.width, canvas.height, 1.08)
   #Trail.drawdata()
 
 #find the maximum x and y and figure out the canvas scale
@@ -130,6 +63,16 @@ Trail.markout = (point) ->
   #cannot get coffeescript to handle multiple lines here!
   Trail.trailtrace.squaremark( Trail.xcentering+(x1+Trail.xoffset)*Trail.scale, Trail.ycentering+(y1+Trail.yoffset)*Trail.scale, Trail.xcentering+(x2+Trail.xoffset)*Trail.scale, Trail.ycentering+(y2+Trail.yoffset)*Trail.scale, col)
 
+Trail.markout_trail = (point) ->
+  x1 = point[0]
+  y1 = point[1]
+  x2 = point[2]
+  y2 = point[3]
+  col = point[4]
+  #AppReport("point #{x1}, #{y1}")
+  #cannot get coffeescript to handle multiple lines here!
+  Trail.trailtrace.mark( Trail.xcentering+(x1+Trail.xoffset)*Trail.scale, Trail.ycentering+(y1+Trail.yoffset)*Trail.scale, col)
+
 Trail.select = ->
   f = new air.File("/home/meesern/Develpment/teaceremony.xml")
   try
@@ -175,30 +118,29 @@ Trail.saveData = (event) ->
     stream.close()
 
 Trail.download = ->
-  AppReport("Fetching Data")
-  #aspect is bogus
-  req = new air.URLRequest("http://greenbean:3000/data/1")
-  loader = new air.URLLoader()
-  configureListeners(loader)
-  try
-    loader.load(req)
-  catch error
-    air.trace("Unable to load request")
+  for aspect in ["60","62","64"]
+    AppReport("Fetching Data")
+    Trail.loads = 0
+    Trail.data = "<collection>"
+    req = new air.URLRequest("http://greenbean:3000/v1.0/data/#{aspect}")
+    loader = new air.URLLoader()
+    configureListeners(loader)
+    try
+      loader.load(req)
+    catch error
+      air.trace("Unable to load request")
 
 Trail.drawdata = ->
   data = Trail.fileload()
-  Trail.parse(data)
+  Trail.parse_squares(data)
 
 Trail.fileload = (file) ->
-  #f = new air.File("/home/meesern/Develpment/streams.xml")
-  #f = new air.File("/home/meesern/Develpment/teaceremony.xml")
   f = Trail.file
   fs = new air.FileStream
   fs.open(f,air.FileMode.READ)
   data = new air.ByteArray
-  fs.readBytes(data,0,fs.bytesAvailable) #this is horrible!
+  fs.readBytes(data,0,fs.bytesAvailable) #adobe-air is horrible!
   data
-
 
 Trail.parse = (data) ->
   AppReport("parsing data")
@@ -221,9 +163,10 @@ Trail.parse = (data) ->
     xs.push(x2)
     ys.push(y2)
     codepoints=code.split(':')
-    color_hue = 0
+    color_hue = 60
     for a in codepoints
-      color_hue += parseFloat(a)*18
+      color_hue += parseFloat(a)*42
+    color_hue %= 255
     points.push([x1,y1,x2,y2,color_hue])
   )
 
@@ -233,9 +176,20 @@ Trail.parse = (data) ->
   #xs = [10,20,30,40,50]
   #ys = [10,20,30,40,50]
   Trail.set_scale(xs,ys)
+  points
+
+Trail.parse_squares = (data) ->
+  points = Trail.parse(data)
   for i in [0..(points.length-1)]
     #AppReport("marking #{i}")
     Trail.markout(points[i])
+  AppReport("parsed")
+
+Trail.parse_trail = (data) ->
+  points = Trail.parse(data)
+  for i in [0..(points.length-1)]
+    #AppReport("marking #{i}")
+    Trail.markout_trail(points[i])
   AppReport("parsed")
 
 configureListeners = (dispatcher) ->
@@ -249,7 +203,12 @@ configureListeners = (dispatcher) ->
 completeHandler = (event) ->
     AppReport("Fetch Complete")
     loader = air.URLLoader(event.target)
-    Trail.parse(loader.data)
+    Trail.data += loader.data
+    Trail.loads++
+    if (Trail.loads >= 3)
+      Trail.data += "</collection>"
+      #AppReport("Trail data: #{Trail.data}")
+      Trail.parse_trail(Trail.data)
 
 
 openHandler = (event) ->

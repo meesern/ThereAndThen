@@ -8,8 +8,9 @@ PSUi.Loaded = function()
     air.trace("*** DOM loaded ***");
 
     //Button click
-    $('#b1').click(exports.select);
-    $('#b2').click(exports.save);
+    $('#b_sel').click(exports.select);
+    $('#b_sav').click(exports.save);
+    $('#b_go').click(exports.download);
     
     //Add configuration options
     var cfg = $('#oc-config-content');

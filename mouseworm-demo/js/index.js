@@ -10,7 +10,7 @@
     canvas.height = 400;
     canvas.width = 900;
     $('#tracker').append(canvas);
-    Index.canvas = $('canvas')[0];
+    Index.canvas = $('canvas');
     Index.ctx = canvas.getContext("2d");
     Index.nowX = 0;
     Index.nowY = 0;
@@ -18,13 +18,13 @@
     Index.maxRadius = 80;
     Index.distance = 0.0;
     Index.radius = Index.minRadius;
-    Index.canvas.mousemove(function(e) {
+    Index.canvas.bind('mousemove', function(e) {
       return Index.mousemove(e);
     });
-    Index.canvas.mouseenter(function(e) {
+    Index.canvas.bind('mouseenter', function(e) {
       return Index.mouseenter(e);
     });
-    return Index.canvas.mouseleave(function(e) {
+    return Index.canvas.bind('mouseleave', function(e) {
       return Index.mouseleave(e);
     });
   };

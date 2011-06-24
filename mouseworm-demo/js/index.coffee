@@ -23,9 +23,11 @@ Index.init = ->
   Index.distance = 0.0
   Index.radius = Index.minRadius
 
-  Index.canvas.mousemove((e)->Index.mousemove(e))
-  Index.canvas.mouseenter((e)->Index.mouseenter(e))
-  Index.canvas.mouseleave((e)->Index.mouseleave(e))
+  #do not understand why jquery's mousemove method stopped being recognised
+  #(firefox 4)
+  Index.canvas.bind('mousemove', (e)->Index.mousemove(e))
+  Index.canvas.bind('mouseenter', (e)->Index.mouseenter(e))
+  Index.canvas.bind('mouseleave', (e)->Index.mouseleave(e))
 
 Index.mouseenter = (e)->
   Index.tick = setInterval("this.mark()", 25)
