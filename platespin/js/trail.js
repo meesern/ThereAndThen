@@ -1,5 +1,5 @@
 (function() {
-  var Trail, completeHandler, configureListeners, httpStatusHandler, ioErrorHandler, openHandler, progressHandler, securityErrorHandler;
+  var Trail, configureListeners, httpStatusHandler, ioErrorHandler, openHandler, progressHandler, securityErrorHandler;
   Trail = typeof exports !== "undefined" && exports !== null ? exports : this;
   Trail.init = function() {
     var canvas;
@@ -9,7 +9,22 @@
     canvas.height = Trail.maxY;
     canvas.width = Trail.maxX;
     $('#tracker').append(canvas);
-    return Trail.trailtrace = new Trail.TrailTrace($('canvas')[0], canvas.width, canvas.height, 1.08);
+    Trail.tt = new Array();
+    return Trail.clear();
+  };
+  Trail.trailtrace = function(key) {
+    var canvas, _base, _ref;
+        if ((_ref = (_base = Trail.tt)[key]) != null) {
+      _ref;
+    } else {
+      _base[key] = 'make';
+    };
+    if (Trail.tt[key] === 'make') {
+      AppReport("New Trailtrace for " + key);
+      canvas = $('canvas')[0];
+      Trail.tt[key] = new Trail.TrailTrace(canvas, canvas.width, canvas.height, 1.08, 80, Trail.huefromcode(key));
+    }
+    return Trail.tt[key];
   };
   Trail.set_scale = function(xs, ys) {
     var bigx, bigy, canvas_longness, data_longness, smallx, smally, x, xrange, y, yrange, _i, _j, _len, _len2;
@@ -51,22 +66,32 @@
     return AppReport("Scale: " + Trail.scale + " bigx: " + bigx + " smallx: " + smallx);
   };
   Trail.markout = function(point) {
-    var col, x1, x2, y1, y2;
+    var code, x1, x2, y1, y2;
     x1 = point[0];
     y1 = point[1];
     x2 = point[2];
     y2 = point[3];
-    col = point[4];
-    return Trail.trailtrace.squaremark(Trail.xcentering + (x1 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y1 + Trail.yoffset) * Trail.scale, Trail.xcentering + (x2 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y2 + Trail.yoffset) * Trail.scale, col);
+    code = point[4];
+    return Trail.trailtrace(code).squaremark(Trail.xcentering + (x1 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y1 + Trail.yoffset) * Trail.scale, Trail.xcentering + (x2 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y2 + Trail.yoffset) * Trail.scale, Trail.huefromcode(code));
   };
   Trail.markout_trail = function(point) {
-    var col, x1, x2, y1, y2;
+    var code, x1, x2, y1, y2;
     x1 = point[0];
     y1 = point[1];
     x2 = point[2];
     y2 = point[3];
-    col = point[4];
-    return Trail.trailtrace.mark(Trail.xcentering + (x1 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y1 + Trail.yoffset) * Trail.scale, col);
+    code = point[4];
+    return Trail.trailtrace(code).mark(Trail.xcentering + (x1 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y1 + Trail.yoffset) * Trail.scale, Trail.huefromcode(code));
+  };
+  Trail.draw = function() {
+    if (AppCtl.getDsFile() === 1) {
+      return Trail.select();
+    } else {
+      return Trail.download();
+    }
+  };
+  Trail.clear = function() {
+    return Trail.trailtrace('0:0:0').clear();
   };
   Trail.select = function() {
     var f;
@@ -114,31 +139,59 @@
     return stream.close();
   };
   Trail.download = function() {
-    var aspect, loader, req, _i, _len, _ref, _results;
-    _ref = ["60", "62", "64"];
+    AppReport("Fetching Item Structure");
+    return Trail.getFromCloud("items", Trail.itemsCompleteHandler);
+  };
+  Trail.itemsCompleteHandler = function(event) {
+    var aspect, aspects, aspects_xml, doc, loader, name, _i, _len, _results;
+    loader = air.URLLoader(event.target);
+    doc = $.parseXML(loader.data);
+    name = $(doc).find("items > name:contains('" + (AppCtl.getItemName()) + "')")[0];
+    AppReport("got " + name);
+    if (name == null) {
+      return;
+    }
+    aspects_xml = $(name).parent().find("aspects");
+    AppReport("found " + aspects_xml.length + " elements");
+    aspects = $.map(aspects_xml, function(aspect, i) {
+      return $(aspect).find('id').text();
+    });
+    AppReport("Fetching Data");
+    Trail.loads = aspects.length;
+    Trail.data = "<collection>";
     _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      aspect = _ref[_i];
-      AppReport("Fetching Data");
-      Trail.loads = 0;
-      Trail.data = "<collection>";
-      req = new air.URLRequest("http://greenbean:3000/v1.0/data/" + aspect);
-      loader = new air.URLLoader();
-      configureListeners(loader);
-      _results.push((function() {
-        try {
-          return loader.load(req);
-        } catch (error) {
-          return air.trace("Unable to load request");
-        }
-      })());
+    for (_i = 0, _len = aspects.length; _i < _len; _i++) {
+      aspect = aspects[_i];
+      _results.push(Trail.getFromCloud("data/" + aspect, Trail.dataCompleteHandler));
     }
     return _results;
+  };
+  Trail.dataCompleteHandler = function(event) {
+    var loader;
+    AppReport("Fetch Complete");
+    loader = air.URLLoader(event.target);
+    Trail.data += loader.data;
+    Trail.loads--;
+    if (Trail.loads <= 0) {
+      Trail.data += "</collection>";
+      return Trail.visualise(Trail.data);
+    }
+  };
+  Trail.getFromCloud = function(api, handler) {
+    var loader, req;
+    req = new air.URLRequest("http://" + (AppCtl.getOcServer()) + ":" + (AppCtl.getPort()) + "/v1/" + api);
+    loader = new air.URLLoader();
+    configureListeners(loader, handler);
+    try {
+      return loader.load(req);
+    } catch (error) {
+      return air.trace("Unable to load request");
+    }
   };
   Trail.drawdata = function() {
     var data;
     data = Trail.fileload();
-    return Trail.parse_squares(data);
+    return Trail.visualise(data);
   };
   Trail.fileload = function(file) {
     var data, f, fs;
@@ -148,6 +201,16 @@
     data = new air.ByteArray;
     fs.readBytes(data, 0, fs.bytesAvailable);
     return data;
+  };
+  Trail.huefromcode = function(code) {
+    var a, codepoints, color_hue, _i, _len;
+    codepoints = code.split(':');
+    color_hue = 60;
+    for (_i = 0, _len = codepoints.length; _i < _len; _i++) {
+      a = codepoints[_i];
+      color_hue += parseFloat(a) * 42;
+    }
+    return color_hue %= 255;
   };
   Trail.parse = function(data) {
     var ments, points, xs, ys;
@@ -159,7 +222,7 @@
     ments = $(Trail.doc).find('marker');
     AppReport("found " + ments.length + " elements");
     ments.each(function() {
-      var a, code, codepoints, color_hue, time, x1, x2, y1, y2, _i, _len;
+      var code, time, x1, x2, y1, y2;
       code = $(this).attr('code');
       time = $(this).attr('timestamp');
       x1 = parseFloat($(this).attr('x1'));
@@ -170,14 +233,7 @@
       ys.push(y1);
       xs.push(x2);
       ys.push(y2);
-      codepoints = code.split(':');
-      color_hue = 60;
-      for (_i = 0, _len = codepoints.length; _i < _len; _i++) {
-        a = codepoints[_i];
-        color_hue += parseFloat(a) * 42;
-      }
-      color_hue %= 255;
-      return points.push([x1, y1, x2, y2, color_hue]);
+      return points.push([x1, y1, x2, y2, code, time]);
     });
     AppReport("found " + points.length + " points");
     if (!(points.length > 0)) {
@@ -186,7 +242,18 @@
     Trail.set_scale(xs, ys);
     return points;
   };
-  Trail.parse_squares = function(data) {
+  Trail.visualise = function(data) {
+    if (AppCtl.getOBox() === 1) {
+      Trail.draw_boxes(data);
+    }
+    if (AppCtl.getOCorner() === 1) {
+      Trail.draw_corners(data);
+    }
+    if (AppCtl.getOfCorner() === 1) {
+      return Trail.draw_first_corners(data);
+    }
+  };
+  Trail.draw_boxes = function(data) {
     var i, points, _ref;
     points = Trail.parse(data);
     for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
@@ -194,7 +261,21 @@
     }
     return AppReport("parsed");
   };
-  Trail.parse_trail = function(data) {
+  Trail.draw_first_corners = function(data) {
+    var code, i, lasttime, points, time, _ref, _ref2, _ref3;
+    points = Trail.parse(data);
+    lasttime = new Array;
+    for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+      code = (_ref2 = points[i]) != null ? _ref2[4] : void 0;
+      time = (_ref3 = points[i]) != null ? _ref3[5] : void 0;
+      if (lasttime[code] !== time) {
+        Trail.markout_trail(points[i]);
+      }
+      lasttime[code] = time;
+    }
+    return AppReport("fc parsed");
+  };
+  Trail.draw_corners = function(data) {
     var i, points, _ref;
     points = Trail.parse(data);
     for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
@@ -202,24 +283,13 @@
     }
     return AppReport("parsed");
   };
-  configureListeners = function(dispatcher) {
-    dispatcher.addEventListener(air.Event.COMPLETE, completeHandler);
+  configureListeners = function(dispatcher, complete) {
+    dispatcher.addEventListener(air.Event.COMPLETE, complete);
     dispatcher.addEventListener(air.Event.OPEN, openHandler);
     dispatcher.addEventListener(air.ProgressEvent.PROGRESS, progressHandler);
     dispatcher.addEventListener(air.SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
     dispatcher.addEventListener(air.HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
     return dispatcher.addEventListener(air.IOErrorEvent.IO_ERROR, ioErrorHandler);
-  };
-  completeHandler = function(event) {
-    var loader;
-    AppReport("Fetch Complete");
-    loader = air.URLLoader(event.target);
-    Trail.data += loader.data;
-    Trail.loads++;
-    if (Trail.loads >= 3) {
-      Trail.data += "</collection>";
-      return Trail.parse_trail(Trail.data);
-    }
   };
   openHandler = function(event) {
     return air.trace("openHandler: " + event);

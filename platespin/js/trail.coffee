@@ -14,9 +14,20 @@ Trail.init = ->
   canvas.height = Trail.maxY
   canvas.width = Trail.maxX
   $('#tracker').append(canvas)
-  Trail.trailtrace = new Trail.TrailTrace($('canvas')[0],
-                         canvas.width, canvas.height, 1.08)
-  #Trail.drawdata()
+  Trail.tt= new Array()
+  Trail.clear()
+
+#
+# New trailtace with hash
+#
+Trail.trailtrace = (key) ->
+  Trail.tt[key] ?= 'make'
+  if (Trail.tt[key] == 'make')
+    AppReport("New Trailtrace for "+key)
+    canvas = $('canvas')[0]
+    Trail.tt[key] = new Trail.TrailTrace(canvas, canvas.width, canvas.height, 1.08, 80, Trail.huefromcode(key))
+  #return
+  Trail.tt[key]
 
 #find the maximum x and y and figure out the canvas scale
 #receive and array of all x's and and array of all y's
@@ -59,20 +70,42 @@ Trail.markout = (point) ->
   y1 = point[1]
   x2 = point[2]
   y2 = point[3]
-  col = point[4]
+  code = point[4]
   #cannot get coffeescript to handle multiple lines here!
-  Trail.trailtrace.squaremark( Trail.xcentering+(x1+Trail.xoffset)*Trail.scale, Trail.ycentering+(y1+Trail.yoffset)*Trail.scale, Trail.xcentering+(x2+Trail.xoffset)*Trail.scale, Trail.ycentering+(y2+Trail.yoffset)*Trail.scale, col)
+  Trail.trailtrace(code).squaremark( Trail.xcentering+(x1+Trail.xoffset)*Trail.scale, Trail.ycentering+(y1+Trail.yoffset)*Trail.scale, Trail.xcentering+(x2+Trail.xoffset)*Trail.scale, Trail.ycentering+(y2+Trail.yoffset)*Trail.scale, Trail.huefromcode(code))
+
 
 Trail.markout_trail = (point) ->
   x1 = point[0]
   y1 = point[1]
   x2 = point[2]
   y2 = point[3]
-  col = point[4]
+  code = point[4]
   #AppReport("point #{x1}, #{y1}")
   #cannot get coffeescript to handle multiple lines here!
-  Trail.trailtrace.mark( Trail.xcentering+(x1+Trail.xoffset)*Trail.scale, Trail.ycentering+(y1+Trail.yoffset)*Trail.scale, col)
+  Trail.trailtrace(code).mark( Trail.xcentering+(x1+Trail.xoffset)*Trail.scale, Trail.ycentering+(y1+Trail.yoffset)*Trail.scale, Trail.huefromcode(code))
 
+#
+# Draw the visualisation from the configured source and according to the 
+# configured output type.
+#
+Trail.draw = ->
+  if (AppCtl.getDsFile() == 1)
+    #Draw by selecting a file
+    Trail.select()
+  else
+    #Draw by downloading
+    Trail.download()
+
+#
+# Clear the canvas
+#
+Trail.clear = ->
+  Trail.trailtrace('0:0:0').clear()
+
+#
+# Draw data by selecting a file
+#
 Trail.select = ->
   f = new air.File("/home/meesern/Develpment/teaceremony.xml")
   try
@@ -86,6 +119,9 @@ Trail.openData = (event) ->
   Trail.file = event.target 
   Trail.drawdata()
 
+#
+# Save a PNG image of the canvas
+#
 Trail.save = ->
   AppReport("Saving Image")
   strData = $('canvas')[0].toDataURL()
@@ -117,22 +153,58 @@ Trail.saveData = (event) ->
     stream.writeBytes(Trail.data,0,len)
     stream.close()
 
+#
+# Draw the canvas from cloud data
+#
 Trail.download = ->
-  for aspect in ["60","62","64"]
-    AppReport("Fetching Data")
-    Trail.loads = 0
-    Trail.data = "<collection>"
-    req = new air.URLRequest("http://greenbean:3000/v1.0/data/#{aspect}")
+  AppReport("Fetching Item Structure")
+  #Get all visible items
+  Trail.getFromCloud("items", Trail.itemsCompleteHandler)
+  
+Trail.itemsCompleteHandler = (event) ->
+  #find all aspects
+  loader = air.URLLoader(event.target)
+  doc =   $.parseXML(loader.data)
+  name = $(doc).find("items > name:contains('#{AppCtl.getItemName()}')")[0]
+  AppReport("got #{name}")
+  return unless name?
+  aspects_xml = $(name).parent().find("aspects")
+  AppReport("found #{aspects_xml.length} elements")
+  aspects = $.map( aspects_xml, (aspect, i) -> 
+    $(aspect).find('id').text()
+  )
+
+  AppReport("Fetching Data")
+  Trail.loads = aspects.length
+  Trail.data = "<collection>"
+  for aspect in aspects
+    #AppReport("Aspect id #{aspect}")
+    Trail.getFromCloud("data/#{aspect}", Trail.dataCompleteHandler)
+
+Trail.dataCompleteHandler = (event) ->
+    AppReport("Fetch Complete")
+    loader = air.URLLoader(event.target)
+    Trail.data += loader.data
+    Trail.loads--
+    if (Trail.loads <= 0)
+      Trail.data += "</collection>"
+      #AppReport("Trail data: #{Trail.data}")
+      Trail.visualise(Trail.data)
+
+
+Trail.getFromCloud = (api, handler) ->
+    req = new air.URLRequest("http://#{AppCtl.getOcServer()}:#{AppCtl.getPort()}/v1/#{api}")
     loader = new air.URLLoader()
-    configureListeners(loader)
+    configureListeners(loader, handler)
     try
       loader.load(req)
     catch error
       air.trace("Unable to load request")
 
+
 Trail.drawdata = ->
   data = Trail.fileload()
-  Trail.parse_squares(data)
+  Trail.visualise(data)
 
 Trail.fileload = (file) ->
   f = Trail.file
@@ -141,6 +213,16 @@ Trail.fileload = (file) ->
   data = new air.ByteArray
   fs.readBytes(data,0,fs.bytesAvailable) #adobe-air is horrible!
   data
+
+#
+#Get Select a hue from the dtouch code
+#
+Trail.huefromcode = (code)->
+  codepoints=code.split(':')
+  color_hue = 60
+  for a in codepoints
+    color_hue += parseFloat(a)*42
+  color_hue %= 255
 
 Trail.parse = (data) ->
   AppReport("parsing data")
@@ -162,12 +244,7 @@ Trail.parse = (data) ->
     ys.push(y1)
     xs.push(x2)
     ys.push(y2)
-    codepoints=code.split(':')
-    color_hue = 60
-    for a in codepoints
-      color_hue += parseFloat(a)*42
-    color_hue %= 255
-    points.push([x1,y1,x2,y2,color_hue])
+    points.push([x1,y1,x2,y2,code, time])
   )
 
   AppReport("found #{points.length} points")
@@ -178,38 +255,62 @@ Trail.parse = (data) ->
   Trail.set_scale(xs,ys)
   points
 
-Trail.parse_squares = (data) ->
+Trail.visualise = (data) ->
+  if (AppCtl.getOBox() == 1)
+    Trail.draw_boxes(data)
+  if (AppCtl.getOCorner() == 1)
+    Trail.draw_corners(data)
+  if (AppCtl.getOfCorner() == 1)
+    Trail.draw_first_corners(data)
+
+
+#Draw boxes
+Trail.draw_boxes = (data) ->
   points = Trail.parse(data)
   for i in [0..(points.length-1)]
     #AppReport("marking #{i}")
     Trail.markout(points[i])
   AppReport("parsed")
 
-Trail.parse_trail = (data) ->
+#
+# visualise bounding box first corner at any one time
+#
+Trail.draw_first_corners = (data) ->
   points = Trail.parse(data)
+  #now we have each point but the corners look like movement
+  #if we plot them directly.  Next simplest is to choose only the 
+  #first point in any timeframe.
+  lasttime = new Array
+  for i in [0..(points.length-1)]
+    code = points[i]?[4]
+    time = points[i]?[5]
+    if (lasttime[code] != time)
+      #AppReport("marking #{i}")
+      Trail.markout_trail(points[i])
+    lasttime[code] = time
+  AppReport("fc parsed")
+
+#
+# visualise all bounding box corners
+#
+Trail.draw_corners = (data) ->
+  points = Trail.parse(data)
+  #now we have each point but the corners look like movement
+  #if we plot them directly.  Next simplest is to choose only the 
+  #first pont in any timeframe.
   for i in [0..(points.length-1)]
     #AppReport("marking #{i}")
     Trail.markout_trail(points[i])
   AppReport("parsed")
 
-configureListeners = (dispatcher) ->
-    dispatcher.addEventListener(air.Event.COMPLETE, completeHandler)
+
+configureListeners = (dispatcher, complete) ->
+    dispatcher.addEventListener(air.Event.COMPLETE, complete)
     dispatcher.addEventListener(air.Event.OPEN, openHandler)
     dispatcher.addEventListener(air.ProgressEvent.PROGRESS, progressHandler)
     dispatcher.addEventListener(air.SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler)
     dispatcher.addEventListener(air.HTTPStatusEvent.HTTP_STATUS, httpStatusHandler)
     dispatcher.addEventListener(air.IOErrorEvent.IO_ERROR, ioErrorHandler)
-
-completeHandler = (event) ->
-    AppReport("Fetch Complete")
-    loader = air.URLLoader(event.target)
-    Trail.data += loader.data
-    Trail.loads++
-    if (Trail.loads >= 3)
-      Trail.data += "</collection>"
-      #AppReport("Trail data: #{Trail.data}")
-      Trail.parse_trail(Trail.data)
-
 
 openHandler = (event) ->
     air.trace("openHandler: " + event)

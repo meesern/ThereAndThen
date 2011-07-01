@@ -12,9 +12,9 @@ AppCtl.db = new air.SQLConnection()
 AppCtl.db.open(air.File.applicationStorageDirectory.resolvePath("preferences.sql"));
 
 // Factory Defaults
-AppCtl.ocPort = "3000";
-AppCtl.ocServer = "greenbean";
-AppCtl.ocDestination = "whathappened";
+AppCtl.defaultPort = "3000";
+AppCtl.defaultServer = "greenbean";
+AppCtl.defaultItemName = "Tea Service";
 
 $(document).ready( PSUi.Loaded );
 
@@ -22,7 +22,7 @@ $(document).ready( PSUi.Loaded );
 // Http Port
 AppCtl.getPort = function()
 {
-	return AppCtl.getOneLineDb('PORT', AppCtl.ocPort);
+	return AppCtl.getOneLineDb('PORT', AppCtl.defaultPort);
 };
 AppCtl.setPort = function(val)
 {
@@ -32,22 +32,112 @@ AppCtl.setPort = function(val)
 // Server Name
 AppCtl.getOcServer = function()
 {
-	return AppCtl.getOneLineDb('OCSERVER', AppCtl.ocServer);
+	return AppCtl.getOneLineDb('OCSERVER', AppCtl.defaultServer);
 }
 AppCtl.setOcServer = function(val)
 {
 	AppCtl.setOneLineDb('OCSERVER',val);
 };
 
-// Server Jid Name
-AppCtl.getOcDest = function()
+// Item Name
+AppCtl.getItemName = function()
 {
-	return AppCtl.getOneLineDb('OCDEST', AppCtl.ocDestination);
+	return AppCtl.getOneLineDb('INAME', AppCtl.defaultItemName);
 }
-AppCtl.setOcDest = function(val)
+AppCtl.setItemName = function(val)
 {
-	AppCtl.setOneLineDb('OCDEST',val);
+	AppCtl.setOneLineDb('INAME',val);
 };
+
+// Data Source
+AppCtl.getDsFile = function()
+{
+	saved =  AppCtl.getOneLineDb('DSSRC', 'file');
+	AppReport('Source: '+saved);
+  	if (saved == 'file')
+	  return 1;
+	else
+	  return 0;
+};
+AppCtl.setDsFile = function(val)
+{
+  	if (val == true)
+	{
+	  AppReport('file source');
+	  save = 'file';
+	  AppCtl.setOneLineDb('DSSRC',save);
+	}
+};
+
+AppCtl.getDsCloud = function()
+{
+	saved =  AppCtl.getOneLineDb('DSSRC', 'file');
+  	if (saved == 'file')
+	  return 0;
+	else
+	  return 1;
+};
+AppCtl.setDsCloud = function(val)
+{
+  	if (val == true)
+	{
+	  save = 'cloud';
+	  AppCtl.setOneLineDb('DSSRC',save);
+	}
+};
+
+// Output Type
+AppCtl.getOBox = function()
+{
+	saved =  AppCtl.getOneLineDb('OPTYPE', 'box');
+	AppReport('Outupt: '+saved);
+  	if (saved == 'box')
+	  return 1;
+	else
+	  return 0;
+}
+AppCtl.setOBox = function(val)
+{
+  	if (val == true)
+	{
+	  save = 'box';
+	  AppCtl.setOneLineDb('OPTYPE',save);
+	}
+};
+AppCtl.getOCorner = function()
+{
+	saved =  AppCtl.getOneLineDb('OPTYPE', 'box');
+  	if (saved == 'corner')
+	  return 1;
+	else
+	  return 0;
+};
+AppCtl.setOCorner = function(val)
+{
+  	if (val == true)
+	{
+	  save = 'corner';
+	  AppCtl.setOneLineDb('OPTYPE',save);
+	}
+};
+AppCtl.getOfCorner = function()
+{
+	saved =  AppCtl.getOneLineDb('OPTYPE', 'box');
+  	if (saved == 'fcorner')
+	  return 1;
+	else
+	  return 0;
+};
+AppCtl.setOfCorner = function(val)
+{
+  	if (val == true)
+	{
+	  save = 'fcorner';
+	  AppCtl.setOneLineDb('OPTYPE',save);
+	}
+};
+
+
 
 //
 //  Persist a value in a one line database table

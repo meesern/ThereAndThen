@@ -32,23 +32,41 @@
 <div style="border-top:1px solid #404040">
   <ul id="menu">
       <li><a href="#" class="drop">Options</a><!-- Begin Home Item -->
-	  <div id="oc-config" class="dropdown_2columns"><!-- Begin 2 columns container -->
-	      <div class="col_1">
-		  <h2>Configure</h2>
-		<div id="oc-config-content" >
-		</div>
-	      </div>
+	  <div id="oc-config" class="dropdown_3columns"><!-- Begin 3 columns container -->
+	      <h2>Configure</h2>
+		<fieldset class='opt_fset'>  
+		<legend> Item Name </legend> 
+		  <p><label> Name</label> <input id='item' type=text name=item/></p> 
+		</fieldset> 
+		<fieldset class='opt_fset'>  
+		<legend> Cloud Location </legend> 
+		  <p><label> Server</label> <input id='server' type=text name=server/></p> 
+		  <p><label> Port </label> <input id='port' type=text name=port/></p> 
+		</fieldset> 
+		<fieldset class='opt_fset'>  
+		<legend> Data Source </legend> 
+		  <p><label> <input id='dsfile' type=radio name=source> File </label></p> 
+		  <p><label> <input id='dscloud' type=radio name=source> Cloud </label></p> 
+		</fieldset> 
+		<fieldset class='opt_fset'>  
+		<legend> Output </legend> 
+		  <p><label> <input id='obox' type=radio name=oput> Box </label></p> 
+		  <p><label> <input id='ocorner' type=radio name=oput> Corner</label></p> 
+		  <p><label> <input id='ofcorner' type=radio name=oput> First Corner</label></p> 
+		</fieldset> 
 	  </div>
       </li>
-      <li><a href="#" class="drop">Draw</a>
+      <li><a href="#" class="drop">Actions</a>
 	  <div class="dropdown_1column">
 	      <div class="col_1">
-		  <p>Draw the data from a file...</p>
-		  <button id = "b_sel" class="button orange medium">Select</button>
-		  <p>Draw the data from the cloud...</p>
+		  <p>Draw the data</p>
 		  <button id = "b_go" class="button blue medium">Go</button>
-		  <p>Save an Image...</p>
+		  <hr/>
+		  <p>Save the Image</p>
 		  <button id = "b_sav" class="button orange medium">Save</button>
+		  <hr/>
+		  <p>Clear the screen</p>
+		  <button id = "b_clr" class="button blue medium">Clear</button>
 
 	      </div>
 	  </div>
