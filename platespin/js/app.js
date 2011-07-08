@@ -2,14 +2,18 @@
 //Create js controller object
 AppCtl = {};
 
+
 //Ruby Interface Functions
 function appctl_getOcDest()  { return AppCtl.getOcDest() };
 function appctl_getOcServer(){ return AppCtl.getOcServer() };
 function appctl_getPort()    { return AppCtl.getPort() };
 
-// Track preferences
-AppCtl.db = new air.SQLConnection()
-AppCtl.db.open(air.File.applicationStorageDirectory.resolvePath("preferences.sql"));
+//// Track preferences
+if (!Browser)
+{
+  AppCtl.db = new air.SQLConnection()
+  AppCtl.db.open(air.File.applicationStorageDirectory.resolvePath("preferences.sql"));
+}
 
 // Factory Defaults
 AppCtl.defaultPort = "3000";
@@ -138,12 +142,15 @@ AppCtl.setOfCorner = function(val)
 };
 
 
-
 //
 //  Persist a value in a one line database table
 //
 AppCtl.getOneLineDb = function(table, init)
 {
+  	if (Browser)
+	{
+	  return;
+	}
 	var val = init;
 	s = new air.SQLStatement();
 	s.sqlConnection = AppCtl.db;
@@ -172,6 +179,10 @@ AppCtl.getOneLineDb = function(table, init)
 //
 AppCtl.setOneLineDb = function(table, val)
 {
+  	if (Browser)
+	{
+	  return;
+	}
 	s = new air.SQLStatement();
 	s.sqlConnection = AppCtl.db;
 

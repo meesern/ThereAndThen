@@ -20,10 +20,13 @@
   <script src="thirdparty_js/jquery-1.5.2.min.js"></script>
   <script src="thirdparty_js/jquery-ui-1.8.11.custom.min.js"></script>
   <script src="thirdparty_js/base64.js"></script>
-  <script src="js/index.js"/>
-  <script src="js/trailtrace.js"/>
-  <script src="js/trail.js"/>
-  <script src="js/app.js"/>
+  <script src="thirdparty_js/hsv.js"></script>
+  <script src="thirdparty_js/pen_min.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/timeline.js"></script>
+  <script src="js/trailtrace.js"></script>
+  <script src="js/trail.js"></script>
+  <script src="js/app.js"></script>
   <script>
       //air.Introspector.Console.log("foo");
   </script>
@@ -74,6 +77,10 @@
   </ul>
   <div id='inner'>
       <div id='tracker'></div>
+      <div id='history'>
+        <h1>History</h1>
+	<canvas id="hc"></canvas>
+      </div>
   </div>
 </div>
 </body>

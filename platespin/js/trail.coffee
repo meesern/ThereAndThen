@@ -17,6 +17,15 @@ Trail.init = ->
   Trail.tt= new Array()
   Trail.clear()
 
+  canvas = $('#history canvas')[0]
+  canvas.height = 30
+  canvas.width = Trail.maxX
+  Trail.timeline = new Trail.TimeLine(canvas, canvas.width, canvas.height)
+  Trail.timeline.clear()
+  Trail.timeline.frame()
+
+  #Get history (from cloud)
+
 #
 # New trailtace with hash
 #
@@ -107,6 +116,7 @@ Trail.clear = ->
 # Draw data by selecting a file
 #
 Trail.select = ->
+  return if (Browser)
   f = new air.File("/home/meesern/Develpment/teaceremony.xml")
   try
     f.addEventListener(air.Event.SELECT, Trail.openData)
@@ -115,7 +125,7 @@ Trail.select = ->
     air.trace("Open Dialog Failed:", error.message)
 
 Trail.openData = (event) ->
-  air.trace("Open Dialog opening")
+  AppReport("Open Dialog opening")
   Trail.file = event.target 
   Trail.drawdata()
 
@@ -123,6 +133,7 @@ Trail.openData = (event) ->
 # Save a PNG image of the canvas
 #
 Trail.save = ->
+  return if (Browser)
   AppReport("Saving Image")
   strData = $('canvas')[0].toDataURL()
   #air.trace "nasty data: " + strData[0..80]
@@ -170,14 +181,18 @@ Trail.itemsCompleteHandler = (event) ->
   return unless name?
   aspects_xml = $(name).parent().find("aspects")
   AppReport("found #{aspects_xml.length} elements")
-  aspects = $.map( aspects_xml, (aspect, i) -> 
+  @aspects = $.map( aspects_xml, (aspect, i) -> 
     $(aspect).find('id').text()
   )
 
+  @history_url = "counts/#{@aspects[0]}" 
+  @history_level = "all"
+  Trail.getFromCloud(@history_url, Trail.historyCompleteHandler)
+
   AppReport("Fetching Data")
-  Trail.loads = aspects.length
+  Trail.loads = @aspects.length
   Trail.data = "<collection>"
-  for aspect in aspects
+  for aspect in @aspects
     #AppReport("Aspect id #{aspect}")
     Trail.getFromCloud("data/#{aspect}", Trail.dataCompleteHandler)
 
@@ -191,15 +206,41 @@ Trail.dataCompleteHandler = (event) ->
       #AppReport("Trail data: #{Trail.data}")
       Trail.visualise(Trail.data)
 
+Trail.historyCompleteHandler = (event) ->
+    AppReport("History Complete")
+    loader = air.URLLoader(event.target)
+    history = Trail.history_parse(loader.data)
+    if history.length == 1
+      AppReport("Get more")
+      stop = false
+      switch @history_level
+        when "all"
+          @history_url+="/#{history[0][1]}"
+          @history_level = "year"
+        when "year"
+          @history_url+="/#{history[0][2]}"
+          @history_level = "day"
+        when "day"
+          @history_url+="/#{history[0][3]}"
+          @history_level = "minute"
+        when "minute"
+          stop = true
+          Trail.timeline.draw(history)
+      AppReport(@history_url)
+      Trail.getFromCloud(@history_url, Trail.historyCompleteHandler) unless stop
+    else
+      Trail.timeline.draw(history)
+
 
 Trail.getFromCloud = (api, handler) ->
+    return if (Browser)
     req = new air.URLRequest("http://#{AppCtl.getOcServer()}:#{AppCtl.getPort()}/v1/#{api}")
     loader = new air.URLLoader()
     configureListeners(loader, handler)
     try
       loader.load(req)
     catch error
-      air.trace("Unable to load request")
+      AppReport("Unable to load request")
 
 
 Trail.drawdata = ->
@@ -223,6 +264,21 @@ Trail.huefromcode = (code)->
   for a in codepoints
     color_hue += parseFloat(a)*42
   color_hue %= 255
+
+Trail.history_parse = (data) ->
+  AppReport(data)
+  history_doc = $.parseXML(data)
+  counts = $(history_doc).find('count')
+  points = []
+  counts.each( ->
+    year = $(this).attr('year')
+    day = $(this).attr('day')
+    minute = $(this).attr('minute')
+    points.push([$(this).text(),year,day,minute])
+  )
+  AppReport("found #{points.length} counts like #{points[0]}")
+  points
+
 
 Trail.parse = (data) ->
   AppReport("parsing data")
@@ -313,21 +369,21 @@ configureListeners = (dispatcher, complete) ->
     dispatcher.addEventListener(air.IOErrorEvent.IO_ERROR, ioErrorHandler)
 
 openHandler = (event) ->
-    air.trace("openHandler: " + event)
+    AppReport("openHandler: " + event)
 
 
 progressHandler = (event) ->
-    air.trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal)
+    AppReport("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal)
 
 
 securityErrorHandler = (event) ->
-    air.trace("securityErrorHandler: " + event)
+    AppReport("securityErrorHandler: " + event)
 
 
 httpStatusHandler = (event) ->
-    air.trace("httpStatusHandler: " + event)
+    AppReport("httpStatusHandler: " + event)
 
 
 ioErrorHandler = (event) ->
-    air.trace("ioErrorHandler: " + event)
+    AppReport("ioErrorHandler: " + event)
 

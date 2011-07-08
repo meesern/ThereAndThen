@@ -10,7 +10,13 @@
     canvas.width = Trail.maxX;
     $('#tracker').append(canvas);
     Trail.tt = new Array();
-    return Trail.clear();
+    Trail.clear();
+    canvas = $('#history canvas')[0];
+    canvas.height = 30;
+    canvas.width = Trail.maxX;
+    Trail.timeline = new Trail.TimeLine(canvas, canvas.width, canvas.height);
+    Trail.timeline.clear();
+    return Trail.timeline.frame();
   };
   Trail.trailtrace = function(key) {
     var canvas, _base, _ref;
@@ -95,6 +101,9 @@
   };
   Trail.select = function() {
     var f;
+    if (Browser) {
+      return;
+    }
     f = new air.File("/home/meesern/Develpment/teaceremony.xml");
     try {
       f.addEventListener(air.Event.SELECT, Trail.openData);
@@ -104,12 +113,15 @@
     }
   };
   Trail.openData = function(event) {
-    air.trace("Open Dialog opening");
+    AppReport("Open Dialog opening");
     Trail.file = event.target;
     return Trail.drawdata();
   };
   Trail.save = function() {
     var byte, data, f, strData, _i, _len;
+    if (Browser) {
+      return;
+    }
     AppReport("Saving Image");
     strData = $('canvas')[0].toDataURL();
     strData = strData.slice(22);
@@ -143,7 +155,7 @@
     return Trail.getFromCloud("items", Trail.itemsCompleteHandler);
   };
   Trail.itemsCompleteHandler = function(event) {
-    var aspect, aspects, aspects_xml, doc, loader, name, _i, _len, _results;
+    var aspect, aspects_xml, doc, loader, name, _i, _len, _ref, _results;
     loader = air.URLLoader(event.target);
     doc = $.parseXML(loader.data);
     name = $(doc).find("items > name:contains('" + (AppCtl.getItemName()) + "')")[0];
@@ -153,15 +165,19 @@
     }
     aspects_xml = $(name).parent().find("aspects");
     AppReport("found " + aspects_xml.length + " elements");
-    aspects = $.map(aspects_xml, function(aspect, i) {
+    this.aspects = $.map(aspects_xml, function(aspect, i) {
       return $(aspect).find('id').text();
     });
+    this.history_url = "counts/" + this.aspects[0];
+    this.history_level = "all";
+    Trail.getFromCloud(this.history_url, Trail.historyCompleteHandler);
     AppReport("Fetching Data");
-    Trail.loads = aspects.length;
+    Trail.loads = this.aspects.length;
     Trail.data = "<collection>";
+    _ref = this.aspects;
     _results = [];
-    for (_i = 0, _len = aspects.length; _i < _len; _i++) {
-      aspect = aspects[_i];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      aspect = _ref[_i];
       _results.push(Trail.getFromCloud("data/" + aspect, Trail.dataCompleteHandler));
     }
     return _results;
@@ -177,15 +193,51 @@
       return Trail.visualise(Trail.data);
     }
   };
+  Trail.historyCompleteHandler = function(event) {
+    var history, loader, stop;
+    AppReport("History Complete");
+    loader = air.URLLoader(event.target);
+    history = Trail.history_parse(loader.data);
+    if (history.length === 1) {
+      AppReport("Get more");
+      stop = false;
+      switch (this.history_level) {
+        case "all":
+          this.history_url += "/" + history[0][1];
+          this.history_level = "year";
+          break;
+        case "year":
+          this.history_url += "/" + history[0][2];
+          this.history_level = "day";
+          break;
+        case "day":
+          this.history_url += "/" + history[0][3];
+          this.history_level = "minute";
+          break;
+        case "minute":
+          stop = true;
+          Trail.timeline.draw(history);
+      }
+      AppReport(this.history_url);
+      if (!stop) {
+        return Trail.getFromCloud(this.history_url, Trail.historyCompleteHandler);
+      }
+    } else {
+      return Trail.timeline.draw(history);
+    }
+  };
   Trail.getFromCloud = function(api, handler) {
     var loader, req;
+    if (Browser) {
+      return;
+    }
     req = new air.URLRequest("http://" + (AppCtl.getOcServer()) + ":" + (AppCtl.getPort()) + "/v1/" + api);
     loader = new air.URLLoader();
     configureListeners(loader, handler);
     try {
       return loader.load(req);
     } catch (error) {
-      return air.trace("Unable to load request");
+      return AppReport("Unable to load request");
     }
   };
   Trail.drawdata = function() {
@@ -211,6 +263,22 @@
       color_hue += parseFloat(a) * 42;
     }
     return color_hue %= 255;
+  };
+  Trail.history_parse = function(data) {
+    var counts, history_doc, points;
+    AppReport(data);
+    history_doc = $.parseXML(data);
+    counts = $(history_doc).find('count');
+    points = [];
+    counts.each(function() {
+      var day, minute, year;
+      year = $(this).attr('year');
+      day = $(this).attr('day');
+      minute = $(this).attr('minute');
+      return points.push([$(this).text(), year, day, minute]);
+    });
+    AppReport("found " + points.length + " counts like " + points[0]);
+    return points;
   };
   Trail.parse = function(data) {
     var ments, points, xs, ys;
@@ -292,18 +360,18 @@
     return dispatcher.addEventListener(air.IOErrorEvent.IO_ERROR, ioErrorHandler);
   };
   openHandler = function(event) {
-    return air.trace("openHandler: " + event);
+    return AppReport("openHandler: " + event);
   };
   progressHandler = function(event) {
-    return air.trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
+    return AppReport("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
   };
   securityErrorHandler = function(event) {
-    return air.trace("securityErrorHandler: " + event);
+    return AppReport("securityErrorHandler: " + event);
   };
   httpStatusHandler = function(event) {
-    return air.trace("httpStatusHandler: " + event);
+    return AppReport("httpStatusHandler: " + event);
   };
   ioErrorHandler = function(event) {
-    return air.trace("ioErrorHandler: " + event);
+    return AppReport("ioErrorHandler: " + event);
   };
 }).call(this);

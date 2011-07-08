@@ -1,11 +1,20 @@
+// User interactions on index page can go here
 // define global object
 PSUi = {};
 
-// User interactions on index page can go here
+//Switch air/titanium off in one go so that we can test in the browser
+//Browser = true;
+Browser = false;
+
+if(Browser)
+{
+  exports = window;
+};
+
 
 PSUi.Loaded = function()
 {
-    air.trace("*** DOM loaded ***");
+    AppReport("*** DOM loaded ***");
 
     //Button click
     $('#b_go').click(exports.draw);
@@ -45,7 +54,14 @@ PSUi.Loaded = function()
 function AppReport(message)
 {
   //$("<p>"+message+"</p>").appendTo('#status')
-  //air.Introspector.Console.log(message);
-  air.trace(message);
+  if (Browser)
+  {
+    console.log(message);
+  }
+  else
+  {
+    //air.Introspector.Console.log(message);
+    air.trace(message);
+  }
 }
 

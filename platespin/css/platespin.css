@@ -36,8 +36,9 @@ body {
 
 #tracker {
   border: 1px solid black;
-  border-radius: 10px;
-  background: #010000; }
+  border-radius: 3px;
+  background: #010000;
+  min-height: 480px; }
 
 #status p {
   margin: 0.5em 0; }
@@ -48,3 +49,15 @@ body {
 
 #oc-config input {
   width: 98%; }
+
+#history {
+  color: white;
+  font-size: 0.8em; }
+
+#history {
+  margin-top: 4px;
+  min-height: 80px;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 3px;
+  background: #010000; }
