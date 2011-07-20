@@ -3,8 +3,8 @@
 PSUi = {};
 
 //Switch air/titanium off in one go so that we can test in the browser
-//Browser = true;
-Browser = false;
+Browser = true;
+//Browser = false;
 
 if(Browser)
 {
@@ -48,12 +48,21 @@ PSUi.Loaded = function()
 
     AppReport("Creating Canvas");
     exports.init();
+    //d3play();
 };
 
+function createBoundedWrapper(object, method)
+{
+  return function() {
+    return method.apply(object, arguments);
+  };
+}
 
 function AppReport(message)
 {
-  //$("<p>"+message+"</p>").appendTo('#status')
+  $("<p>"+message+"</p>").appendTo('#status')
+  $('#status').scrollTop($('#status')[0].scrollHeight);
+
   if (Browser)
   {
     console.log(message);
@@ -63,5 +72,47 @@ function AppReport(message)
     //air.Introspector.Console.log(message);
     air.trace(message);
   }
+}
+
+
+function d3play()
+{
+  var data = [4, 8,15, 16, 23, 42];
+  var w = 80;
+  var h = 20;
+
+  var chart = d3.select("#history").append("svg:svg")
+    .attr("class", "chart")
+    .attr("width", w * data.length - 1)
+    .attr("height", h);
+
+  var x = d3.scale.linear()
+            .domain([0,1])
+	    .range([0,w]);
+
+  /*
+  var y = d3.scale.ordinal()
+            .domain(data)
+	    .rangeBands([0,120]);
+	    */
+  var y = d3.scale.linear()
+            .domain([0,100])
+	    .rangeRound([0,h]);
+  
+  /* the bars */
+  chart.selectAll("rect")
+    .data(data)
+   .enter().append("svg:rect")
+    .attr("x", function(d,i) {return x(i) - 0.5; })
+    .attr("y", function(d,i) {return h - y(d) - 0.5; })
+    .attr("width", w)
+    .attr("height", function(d) {return y(d); });
+  /* the axis */
+  chart.append("svg:line")
+    .attr("x1", 0)
+    .attr("x2", w * data.length)
+    .attr("y1", h - 0.5)
+    .attr("y2", h - 0.5)
+    .attr("stroke", "#000");
 }
 

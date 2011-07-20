@@ -149,7 +149,13 @@ AppCtl.getOneLineDb = function(table, init)
 {
   	if (Browser)
 	{
-	  return;
+	  var val = localStorage[table];
+	  if (val == null)
+	  {
+	    val = init;
+	    AppCtl.setOneLineDb(table, val);
+	  }
+	  return val;
 	}
 	var val = init;
 	s = new air.SQLStatement();
@@ -181,6 +187,7 @@ AppCtl.setOneLineDb = function(table, val)
 {
   	if (Browser)
 	{
+	  localStorage[table] = val;
 	  return;
 	}
 	s = new air.SQLStatement();

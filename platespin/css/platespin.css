@@ -23,13 +23,15 @@ body {
   color: white;
   margin: 7px auto 0px auto;
   padding: 0px 20px 0px 20px;
+  height: 3em;
   /* Rounded Corners */
   border-radius: 10px;
   /* Background color and gradients */
   background: #a1a494;
   /* Borders */
   border: 1px solid #002232;
-  box-shadow: inset 0px 0px 1px #edf9ff; }
+  box-shadow: inset 0px 0px 1px #edf9ff;
+  overflow-y: scroll; }
 
 #inner {
   padding: 10px; }
@@ -52,12 +54,37 @@ body {
 
 #history {
   color: white;
-  font-size: 0.8em; }
-
-#history {
+  font-size: 0.8em;
   margin-top: 4px;
   min-height: 80px;
   width: 100%;
   border: 1px solid black;
-  border-radius: 3px;
+  border-radius: 10px;
   background: #010000; }
+
+#history h1 {
+  font-size: 1.2em;
+  font-family: Arial;
+  margin-left: 8px; }
+
+#history svg {
+  cursor: crosshair; }
+
+.chart {
+  margin-left: 20px; }
+
+.chart rect {
+  stroke: #0272a7;
+  fill: #014464; }
+
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white; }
+
+#selection {
+  fill: rgba(34, 102, 0, 0.1);
+  stroke: #cccccc; }

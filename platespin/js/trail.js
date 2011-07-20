@@ -1,5 +1,6 @@
 (function() {
   var Trail, configureListeners, httpStatusHandler, ioErrorHandler, openHandler, progressHandler, securityErrorHandler;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Trail = typeof exports !== "undefined" && exports !== null ? exports : this;
   Trail.init = function() {
     var canvas;
@@ -11,10 +12,7 @@
     $('#tracker').append(canvas);
     Trail.tt = new Array();
     Trail.clear();
-    canvas = $('#history canvas')[0];
-    canvas.height = 30;
-    canvas.width = Trail.maxX;
-    Trail.timeline = new Trail.TimeLine(canvas, canvas.width, canvas.height);
+    Trail.timeline = new Trail.TimeLine('#history', Trail.maxX, 30, Trail);
     Trail.timeline.clear();
     return Trail.timeline.frame();
   };
@@ -154,10 +152,18 @@
     AppReport("Fetching Item Structure");
     return Trail.getFromCloud("items", Trail.itemsCompleteHandler);
   };
-  Trail.itemsCompleteHandler = function(event) {
-    var aspect, aspects_xml, doc, loader, name, _i, _len, _ref, _results;
-    loader = air.URLLoader(event.target);
-    doc = $.parseXML(loader.data);
+  Trail.itemsCompleteHandler = __bind(function(event) {
+    var aspect, aspects_xml, data, doc, loader, name, _i, _len, _ref, _results;
+    if (Browser) {
+      if (event.target.readyState !== 4) {
+        return;
+      }
+      data = event.target.responseText;
+    } else {
+      loader = air.URLLoader(event.target);
+      data = loader.data;
+    }
+    doc = $.parseXML(data);
     name = $(doc).find("items > name:contains('" + (AppCtl.getItemName()) + "')")[0];
     AppReport("got " + name);
     if (name == null) {
@@ -168,10 +174,10 @@
     this.aspects = $.map(aspects_xml, function(aspect, i) {
       return $(aspect).find('id').text();
     });
-    this.history_url = "counts/" + this.aspects[0];
+    this.history_url = "counts/" + this.aspects[0] + "?grain=200";
     this.history_level = "all";
     Trail.getFromCloud(this.history_url, Trail.historyCompleteHandler);
-    AppReport("Fetching Data");
+    AppReport("Fetching History & Data");
     Trail.loads = this.aspects.length;
     Trail.data = "<collection>";
     _ref = this.aspects;
@@ -181,25 +187,43 @@
       _results.push(Trail.getFromCloud("data/" + aspect, Trail.dataCompleteHandler));
     }
     return _results;
-  };
-  Trail.dataCompleteHandler = function(event) {
-    var loader;
-    AppReport("Fetch Complete");
-    loader = air.URLLoader(event.target);
-    Trail.data += loader.data;
+  }, this);
+  Trail.dataCompleteHandler = __bind(function(event) {
+    var data, loader;
+    if (Browser) {
+      if (event.target.readyState !== 4) {
+        return;
+      }
+      data = event.target.response;
+    } else {
+      loader = air.URLLoader(event.target);
+      data = loader.data;
+    }
+    AppReport("Fetch Returned - more");
+    Trail.data += data;
     Trail.loads--;
     if (Trail.loads <= 0) {
       Trail.data += "</collection>";
+      AppReport("Fetch Complete - plotting");
       return Trail.visualise(Trail.data);
     }
-  };
-  Trail.historyCompleteHandler = function(event) {
-    var history, loader, stop;
+  }, this);
+  Trail.historyCompleteHandler = __bind(function(event) {
+    var data, history, loader, stop;
     AppReport("History Complete");
-    loader = air.URLLoader(event.target);
-    history = Trail.history_parse(loader.data);
+    if (Browser) {
+      if (event.target.readyState !== 4) {
+        return;
+      }
+      data = event.target.response;
+    } else {
+      loader = air.URLLoader(event.target);
+      data = loader.data;
+    }
+    history = Trail.history_parse(data);
     if (history.length === 1) {
-      AppReport("Get more");
+      AppReport("Should not need to get more");
+      return;
       stop = false;
       switch (this.history_level) {
         case "all":
@@ -225,19 +249,25 @@
     } else {
       return Trail.timeline.draw(history);
     }
-  };
+  }, this);
   Trail.getFromCloud = function(api, handler) {
-    var loader, req;
+    var loader, req, url;
+    url = "http://greenbean:3000/v1/" + api;
     if (Browser) {
-      return;
-    }
-    req = new air.URLRequest("http://" + (AppCtl.getOcServer()) + ":" + (AppCtl.getPort()) + "/v1/" + api);
-    loader = new air.URLLoader();
-    configureListeners(loader, handler);
-    try {
-      return loader.load(req);
-    } catch (error) {
-      return AppReport("Unable to load request");
+      req = new XMLHttpRequest();
+      req.open("GET", url, true);
+      req.onreadystatechange = handler;
+      req.onprogress = progressHandler;
+      return req.send();
+    } else {
+      req = new air.URLRequest(url);
+      loader = new air.URLLoader();
+      configureListeners(loader, handler);
+      try {
+        return loader.load(req);
+      } catch (error) {
+        return AppReport("Unable to load request");
+      }
     }
   };
   Trail.drawdata = function() {
@@ -271,37 +301,47 @@
     counts = $(history_doc).find('count');
     points = [];
     counts.each(function() {
-      var day, minute, year;
+      var day, minute, second, year;
       year = $(this).attr('year');
       day = $(this).attr('day');
       minute = $(this).attr('minute');
-      return points.push([$(this).text(), year, day, minute]);
+      second = $(this).attr('second');
+      return points.push([$(this).text(), year, day, minute, second]);
     });
     AppReport("found " + points.length + " counts like " + points[0]);
     return points;
   };
-  Trail.parse = function(data) {
-    var ments, points, xs, ys;
-    AppReport("parsing data");
+  Trail.parse = function(data, pstart, pend) {
+    var ments, points, te, ts, xs, ys;
+    AppReport("parsing data from " + pstart + " to " + pend);
     xs = [];
     ys = [];
     points = [];
     Trail.doc = $.parseXML(data);
     ments = $(Trail.doc).find('marker');
     AppReport("found " + ments.length + " elements");
+    ts = new Date(pstart);
+    te = new Date(pend);
     ments.each(function() {
-      var code, time, x1, x2, y1, y2;
-      code = $(this).attr('code');
-      time = $(this).attr('timestamp');
-      x1 = parseFloat($(this).attr('x1'));
-      x2 = parseFloat($(this).attr('x2'));
-      y1 = parseFloat($(this).attr('y1'));
-      y2 = parseFloat($(this).attr('y2'));
-      xs.push(x1);
-      ys.push(y1);
-      xs.push(x2);
-      ys.push(y2);
-      return points.push([x1, y1, x2, y2, code, time]);
+      var code, marker, t, time, tmte, tmts, x1, x2, y1, y2;
+      marker = $(this);
+      time = marker.parent().attr('t');
+      t = new Date(time);
+      tmte = t - te;
+      tmts = t - ts;
+      if (tmts > 0 && tmte < 0) {
+        code = marker.attr('code');
+        time = marker.attr('timestamp');
+        x1 = parseFloat(marker.attr('x1'));
+        x2 = parseFloat(marker.attr('x2'));
+        y1 = parseFloat(marker.attr('y1'));
+        y2 = parseFloat(marker.attr('y2'));
+        xs.push(x1);
+        ys.push(y1);
+        xs.push(x2);
+        ys.push(y2);
+        return points.push([x1, y1, x2, y2, code, time]);
+      }
     });
     AppReport("found " + points.length + " points");
     if (!(points.length > 0)) {
@@ -310,28 +350,34 @@
     Trail.set_scale(xs, ys);
     return points;
   };
-  Trail.visualise = function(data) {
+  Trail.visualise = function(data, pstart, pend) {
+    if (pstart == null) {
+      pstart = 0;
+    }
+    if (pend == null) {
+      pend = new Date();
+    }
     if (AppCtl.getOBox() === 1) {
-      Trail.draw_boxes(data);
+      Trail.draw_boxes(data, pstart, pend);
     }
     if (AppCtl.getOCorner() === 1) {
-      Trail.draw_corners(data);
+      Trail.draw_corners(data, pstart, pend);
     }
     if (AppCtl.getOfCorner() === 1) {
-      return Trail.draw_first_corners(data);
+      return Trail.draw_first_corners(data, pstart, pend);
     }
   };
-  Trail.draw_boxes = function(data) {
+  Trail.draw_boxes = function(data, pstart, pend) {
     var i, points, _ref;
-    points = Trail.parse(data);
+    points = Trail.parse(data, pstart, pend);
     for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
       Trail.markout(points[i]);
     }
     return AppReport("parsed");
   };
-  Trail.draw_first_corners = function(data) {
+  Trail.draw_first_corners = function(data, pstart, pend) {
     var code, i, lasttime, points, time, _ref, _ref2, _ref3;
-    points = Trail.parse(data);
+    points = Trail.parse(data, pstart, pend);
     lasttime = new Array;
     for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
       code = (_ref2 = points[i]) != null ? _ref2[4] : void 0;
@@ -343,13 +389,16 @@
     }
     return AppReport("fc parsed");
   };
-  Trail.draw_corners = function(data) {
+  Trail.draw_corners = function(data, pstart, pend) {
     var i, points, _ref;
-    points = Trail.parse(data);
+    points = Trail.parse(data, pstart, pend);
     for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
       Trail.markout_trail(points[i]);
     }
     return AppReport("parsed");
+  };
+  Trail.draw_part = function(pstart, pend) {
+    return Trail.visualise(Trail.data, pstart, pend);
   };
   configureListeners = function(dispatcher, complete) {
     dispatcher.addEventListener(air.Event.COMPLETE, complete);
@@ -363,7 +412,7 @@
     return AppReport("openHandler: " + event);
   };
   progressHandler = function(event) {
-    return AppReport("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
+    return AppReport("progressHandler loaded:" + event.loaded + " total: " + event.total);
   };
   securityErrorHandler = function(event) {
     return AppReport("securityErrorHandler: " + event);

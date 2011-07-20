@@ -76,10 +76,10 @@ body, ul, li {
 }
 #menu li .drop {
 	padding-right:21px;
-	background:url("img/drop.png") no-repeat right 8px;
+	background:url("../img/drop.png") no-repeat right 8px;
 }
 #menu li:hover .drop {
-	background:url("img/drop.png") no-repeat right 7px;
+	background:url("../img/drop.png") no-repeat right 7px;
 }
 
 .dropdown_1column, 

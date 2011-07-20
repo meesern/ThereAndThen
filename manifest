@@ -4,18 +4,18 @@
 #image:default_app_logo.png
 #url:http://www.horizon.ac.uk
 #guid:852e6a48-e0be-45c9-9d29-bbefbe2f8a34
-#desc:No description provided
+#desc:What happened when and where
 #type:desktop
-runtime:1.1.0
-tiplatform:1.1.0
-tiui:1.1.0
-tifilesystem:1.1.0
-tiapp:1.1.0
-tidatabase:1.1.0
-timonkey:1.1.0
-tinetwork:1.1.0
-timedia:1.1.0
-tiworker:1.1.0
-ruby:1.1.0
-ticodec:1.1.0
-tiprocess:1.1.0
+runtime:1.2.0.RC2
+tiplatform:1.2.0.RC2
+tiui:1.2.0.RC2
+tifilesystem:1.2.0.RC2
+tiapp:1.2.0.RC2
+tidatabase:1.2.0.RC2
+timonkey:1.2.0.RC2
+tinetwork:1.2.0.RC2
+timedia:1.2.0.RC2
+tiworker:1.2.0.RC2
+ruby:1.2.0.RC2
+ticodec:1.2.0.RC2
+tiprocess:1.2.0.RC2

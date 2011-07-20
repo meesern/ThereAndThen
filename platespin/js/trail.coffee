@@ -17,17 +17,14 @@ Trail.init = ->
   Trail.tt= new Array()
   Trail.clear()
 
-  canvas = $('#history canvas')[0]
-  canvas.height = 30
-  canvas.width = Trail.maxX
-  Trail.timeline = new Trail.TimeLine(canvas, canvas.width, canvas.height)
+  Trail.timeline = new Trail.TimeLine('#history', Trail.maxX, 
+                          30, Trail)
   Trail.timeline.clear()
   Trail.timeline.frame()
-
   #Get history (from cloud)
 
 #
-# New trailtace with hash
+# New trailtrace with hash
 #
 Trail.trailtrace = (key) ->
   Trail.tt[key] ?= 'make'
@@ -168,50 +165,70 @@ Trail.saveData = (event) ->
 # Draw the canvas from cloud data
 #
 Trail.download = ->
-  AppReport("Fetching Item Structure")
-  #Get all visible items
-  Trail.getFromCloud("items", Trail.itemsCompleteHandler)
+    AppReport("Fetching Item Structure")
+    #Get all visible items
+    Trail.getFromCloud("items", Trail.itemsCompleteHandler)
   
-Trail.itemsCompleteHandler = (event) ->
-  #find all aspects
-  loader = air.URLLoader(event.target)
-  doc =   $.parseXML(loader.data)
-  name = $(doc).find("items > name:contains('#{AppCtl.getItemName()}')")[0]
-  AppReport("got #{name}")
-  return unless name?
-  aspects_xml = $(name).parent().find("aspects")
-  AppReport("found #{aspects_xml.length} elements")
-  @aspects = $.map( aspects_xml, (aspect, i) -> 
-    $(aspect).find('id').text()
-  )
+Trail.itemsCompleteHandler = (event) =>
+    if (Browser)
+      if event.target.readyState != 4 #Complete (!)
+        return
+      data = event.target.responseText
+    else
+      loader = air.URLLoader(event.target)
+      data = loader.data
+    #find all aspects
+    doc =   $.parseXML(data)
+    name = $(doc).find("items > name:contains('#{AppCtl.getItemName()}')")[0]
+    AppReport("got #{name}")
+    return unless name?
+    aspects_xml = $(name).parent().find("aspects")
+    AppReport("found #{aspects_xml.length} elements")
+    @aspects = $.map( aspects_xml, (aspect, i) -> 
+      $(aspect).find('id').text()
+    )
 
-  @history_url = "counts/#{@aspects[0]}" 
-  @history_level = "all"
-  Trail.getFromCloud(@history_url, Trail.historyCompleteHandler)
+    @history_url = "counts/#{@aspects[0]}?grain=200" 
+    @history_level = "all"
+    Trail.getFromCloud(@history_url, Trail.historyCompleteHandler)
 
-  AppReport("Fetching Data")
-  Trail.loads = @aspects.length
-  Trail.data = "<collection>"
-  for aspect in @aspects
-    #AppReport("Aspect id #{aspect}")
-    Trail.getFromCloud("data/#{aspect}", Trail.dataCompleteHandler)
+    AppReport("Fetching History & Data")
+    Trail.loads = @aspects.length
+    Trail.data = "<collection>"
+    for aspect in @aspects
+      #AppReport("Aspect id #{aspect}")
+      Trail.getFromCloud("data/#{aspect}", Trail.dataCompleteHandler)
 
-Trail.dataCompleteHandler = (event) ->
-    AppReport("Fetch Complete")
-    loader = air.URLLoader(event.target)
-    Trail.data += loader.data
+Trail.dataCompleteHandler = (event) =>
+    if (Browser)
+      if event.target.readyState != 4 #Complete (!)
+        return
+      data = event.target.response
+    else
+      loader = air.URLLoader(event.target)
+      data = loader.data
+    AppReport("Fetch Returned - more")
+    Trail.data += data
     Trail.loads--
     if (Trail.loads <= 0)
       Trail.data += "</collection>"
       #AppReport("Trail data: #{Trail.data}")
+      AppReport("Fetch Complete - plotting")
       Trail.visualise(Trail.data)
 
-Trail.historyCompleteHandler = (event) ->
+Trail.historyCompleteHandler = (event) =>
     AppReport("History Complete")
-    loader = air.URLLoader(event.target)
-    history = Trail.history_parse(loader.data)
+    if (Browser)
+      if event.target.readyState != 4 #Complete (!)
+        return
+      data = event.target.response
+    else
+      loader = air.URLLoader(event.target)
+      data = loader.data
+    history = Trail.history_parse(data)
     if history.length == 1
-      AppReport("Get more")
+      AppReport("Should not need to get more")
+      return # Old code below
       stop = false
       switch @history_level
         when "all"
@@ -228,19 +245,27 @@ Trail.historyCompleteHandler = (event) ->
           Trail.timeline.draw(history)
       AppReport(@history_url)
       Trail.getFromCloud(@history_url, Trail.historyCompleteHandler) unless stop
-    else
+    else 
       Trail.timeline.draw(history)
 
 
 Trail.getFromCloud = (api, handler) ->
-    return if (Browser)
-    req = new air.URLRequest("http://#{AppCtl.getOcServer()}:#{AppCtl.getPort()}/v1/#{api}")
-    loader = new air.URLLoader()
-    configureListeners(loader, handler)
-    try
-      loader.load(req)
-    catch error
-      AppReport("Unable to load request")
+    #url = "http://#{AppCtl.getOcServer()}:#{AppCtl.getPort()}/v1/#{api}"
+    url = "http://greenbean:3000/v1/#{api}"
+    if (Browser)
+      req = new XMLHttpRequest()
+      req.open("GET",url,true)
+      req.onreadystatechange = handler
+      req.onprogress = progressHandler
+      req.send()
+    else
+      req = new air.URLRequest(url)
+      loader = new air.URLLoader()
+      configureListeners(loader, handler)
+      try
+        loader.load(req)
+      catch error
+        AppReport("Unable to load request")
 
 
 Trail.drawdata = ->
@@ -274,14 +299,15 @@ Trail.history_parse = (data) ->
     year = $(this).attr('year')
     day = $(this).attr('day')
     minute = $(this).attr('minute')
-    points.push([$(this).text(),year,day,minute])
+    second = $(this).attr('second')
+    points.push([$(this).text(),year,day,minute,second])
   )
   AppReport("found #{points.length} counts like #{points[0]}")
   points
 
 
-Trail.parse = (data) ->
-  AppReport("parsing data")
+Trail.parse = (data, pstart, pend) ->
+  AppReport("parsing data from #{pstart} to #{pend}")
   xs = []
   ys = []
   points = []
@@ -289,18 +315,26 @@ Trail.parse = (data) ->
   #AppReport("got: #{Trail.doc}")
   ments = $(Trail.doc).find('marker')
   AppReport("found #{ments.length} elements")
+  ts = new Date(pstart)
+  te = new Date(pend)
   ments.each( ->
-    code = $(this).attr('code')
-    time = $(this).attr('timestamp')
-    x1 = parseFloat($(this).attr('x1'))
-    x2 = parseFloat($(this).attr('x2'))
-    y1 = parseFloat($(this).attr('y1'))
-    y2 = parseFloat($(this).attr('y2'))
-    xs.push(x1)
-    ys.push(y1)
-    xs.push(x2)
-    ys.push(y2)
-    points.push([x1,y1,x2,y2,code, time])
+    marker = $(this)
+    time = marker.parent().attr('t')
+    t = new Date(time)
+    tmte = t-te
+    tmts = t-ts
+    if (tmts > 0 and tmte < 0)
+      code = marker.attr('code')
+      time = marker.attr('timestamp') #time only from xml
+      x1 = parseFloat(marker.attr('x1'))
+      x2 = parseFloat(marker.attr('x2'))
+      y1 = parseFloat(marker.attr('y1'))
+      y2 = parseFloat(marker.attr('y2'))
+      xs.push(x1)
+      ys.push(y1)
+      xs.push(x2)
+      ys.push(y2)
+      points.push([x1,y1,x2,y2,code, time])
   )
 
   AppReport("found #{points.length} points")
@@ -311,18 +345,18 @@ Trail.parse = (data) ->
   Trail.set_scale(xs,ys)
   points
 
-Trail.visualise = (data) ->
+Trail.visualise = (data, pstart=0, pend=new Date()) ->
   if (AppCtl.getOBox() == 1)
-    Trail.draw_boxes(data)
+    Trail.draw_boxes(data, pstart, pend)
   if (AppCtl.getOCorner() == 1)
-    Trail.draw_corners(data)
+    Trail.draw_corners(data, pstart, pend)
   if (AppCtl.getOfCorner() == 1)
-    Trail.draw_first_corners(data)
+    Trail.draw_first_corners(data, pstart, pend)
 
 
 #Draw boxes
-Trail.draw_boxes = (data) ->
-  points = Trail.parse(data)
+Trail.draw_boxes = (data, pstart, pend) ->
+  points = Trail.parse(data, pstart, pend)
   for i in [0..(points.length-1)]
     #AppReport("marking #{i}")
     Trail.markout(points[i])
@@ -331,8 +365,8 @@ Trail.draw_boxes = (data) ->
 #
 # visualise bounding box first corner at any one time
 #
-Trail.draw_first_corners = (data) ->
-  points = Trail.parse(data)
+Trail.draw_first_corners = (data, pstart, pend) ->
+  points = Trail.parse(data, pstart, pend)
   #now we have each point but the corners look like movement
   #if we plot them directly.  Next simplest is to choose only the 
   #first point in any timeframe.
@@ -349,8 +383,8 @@ Trail.draw_first_corners = (data) ->
 #
 # visualise all bounding box corners
 #
-Trail.draw_corners = (data) ->
-  points = Trail.parse(data)
+Trail.draw_corners = (data, pstart, pend) ->
+  points = Trail.parse(data, pstart, pend)
   #now we have each point but the corners look like movement
   #if we plot them directly.  Next simplest is to choose only the 
   #first pont in any timeframe.
@@ -359,6 +393,10 @@ Trail.draw_corners = (data) ->
     Trail.markout_trail(points[i])
   AppReport("parsed")
 
+# Control callbacks from timeline
+# Draw a proportion of the total history
+Trail.draw_part = (pstart, pend)->
+  Trail.visualise(Trail.data, pstart, pend)
 
 configureListeners = (dispatcher, complete) ->
     dispatcher.addEventListener(air.Event.COMPLETE, complete)
@@ -373,7 +411,8 @@ openHandler = (event) ->
 
 
 progressHandler = (event) ->
-    AppReport("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal)
+  #AppReport("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal)
+    AppReport("progressHandler loaded:" + event.loaded + " total: " + event.total)
 
 
 securityErrorHandler = (event) ->
