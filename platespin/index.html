@@ -48,9 +48,14 @@
 		  <p><label> Port </label> <input id='port' type=text name=port/></p> 
 		</fieldset> 
 		<fieldset class='opt_fset'>  
+		<legend> Replay </legend> 
+		  <p><label> Rate</label> <input id='rate' type=text name=rate value="1"/>0.001-100000</p> 
+		  <p><label> Gapskip</label> <input id='gskip' type=text name=gskip value="0"/>seconds</p> 
+		</fieldset> 
+		<fieldset class='opt_fset'>  
 		<legend> Data Source </legend> 
-		  <p><label> <input id='dsfile' type=radio name=source> File </label></p> 
-		  <p><label> <input id='dscloud' type=radio name=source> Cloud </label></p> 
+		  <p><label><input id='dsfile' type=radio name=source> File</label></p> 
+		  <p><label><input id='dscloud' type=radio name=source> Cloud</label></p> 
 		</fieldset> 
 		<fieldset class='opt_fset'>  
 		<legend> Output </legend> 
@@ -63,14 +68,18 @@
       <li><a href="#" class="drop">Actions</a>
 	  <div class="dropdown_1column">
 	      <div class="col_1">
-		  <p>Draw the data</p>
-		  <button id = "b_go" class="button blue medium">Go</button>
+		  <p>Draw all the data</p>
+		  <button id = "b_go" class="button blue medium">Fetch</button>
+		  <hr/>
+		  <p>Replay the data</p>
+		  <button id = "b_run" class="button orange medium">Replay</button>
+		  <button id = "b_stp" class="button orange medium">Stop</button>
 		  <hr/>
 		  <p>Save the Image</p>
-		  <button id = "b_sav" class="button orange medium">Save</button>
+		  <button id = "b_sav" class="button blue medium">Save</button>
 		  <hr/>
 		  <p>Clear the screen</p>
-		  <button id = "b_clr" class="button blue medium">Clear</button>
+		  <button id = "b_clr" class="button orange medium">Clear</button>
 
 	      </div>
 	  </div>

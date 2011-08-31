@@ -7,6 +7,8 @@ AppCtl = {};
 function appctl_getOcDest()  { return AppCtl.getOcDest() };
 function appctl_getOcServer(){ return AppCtl.getOcServer() };
 function appctl_getPort()    { return AppCtl.getPort() };
+function appctl_getRate()    { return AppCtl.getRate() };
+function appctl_getSkip()    { return AppCtl.getSkip() };
 
 //// Track preferences
 if (!Browser)
@@ -19,9 +21,30 @@ if (!Browser)
 AppCtl.defaultPort = "3000";
 AppCtl.defaultServer = "greenbean";
 AppCtl.defaultItemName = "Tea Service";
+AppCtl.defaultRate = "1";
+AppCtl.defaultSkip = "0";
 
 $(document).ready( PSUi.Loaded );
 
+// Replay Rate
+AppCtl.getRate = function()
+{
+	return AppCtl.getOneLineDb('RATE', AppCtl.defaultRate);
+};
+AppCtl.setRate = function(val)
+{
+	AppCtl.setOneLineDb('RATE',val);
+};
+
+// Replay Gap Skip
+AppCtl.getSkip = function()
+{
+	return AppCtl.getOneLineDb('SKIP', AppCtl.defaultSkip);
+};
+AppCtl.setSkip = function(val)
+{
+	AppCtl.setOneLineDb('SKIP',val);
+};
 
 // Http Port
 AppCtl.getPort = function()

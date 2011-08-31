@@ -94,6 +94,60 @@
       return Trail.download();
     }
   };
+  Trail.stop = function() {
+    return Trail.stopReplay();
+  };
+  Trail.stopReplay = function() {
+    var replay_url;
+    if (this.replayRunning != null) {
+      AppReport("Stopping replay " + this.replayRunning);
+      replay_url = "replay-control/" + this.replayRunning + "?stop=1";
+      Trail.putToCloud(replay_url, Trail.replayctlResponseHandler);
+      return this.replayRunning = null;
+    } else {
+      return AppReport("No replay running");
+    }
+  };
+  Trail.replayctlResponseHandler = function() {
+    return AppReport("ok");
+  };
+  Trail.replay = function() {
+    return Trail.startReplay();
+  };
+  Trail.startReplay = function() {
+    AppReport("Starting a Replay");
+    if (this.replayRunning != null) {
+      return AppReport("Replay " + this.replayRunning + " already running");
+    } else {
+      this.structureRequest = Trail.replayWithStructure;
+      return Trail.getStructure();
+    }
+  };
+  Trail.replayWithStructure = function() {
+    var aspect, replay_url;
+    aspect = this.aspects[0];
+    AppReport("Starting replay for " + aspect);
+    replay_url = "replay-create/" + aspect + "?start=1&rate=" + (AppCtl.getRate()) + "&gapskip=" + (AppCtl.getSkip());
+    return Trail.putToCloud(replay_url, Trail.replayResponseHandler);
+  };
+  Trail.replayResponseHandler = __bind(function(event) {
+    var data, loader, replayid, valid;
+    if (Browser) {
+      if (event.target.readyState !== 4) {
+        return;
+      }
+      data = event.target.responseText;
+    } else {
+      loader = air.URLLoader(event.target);
+      data = loader.data;
+    }
+    AppReport("Replay started at node " + data);
+    valid = new RegExp("/replay/\\d+$");
+    replayid = new RegExp("\\d+$");
+    if (valid.test(data)) {
+      return this.replayRunning = replayid.exec(data);
+    }
+  }, this);
   Trail.clear = function() {
     return Trail.trailtrace('0:0:0').clear();
   };
@@ -149,11 +203,15 @@
     return stream.close();
   };
   Trail.download = function() {
+    this.structureRequest = Trail.getHistory;
+    return Trail.getStructure();
+  };
+  Trail.getStructure = function() {
     AppReport("Fetching Item Structure");
     return Trail.getFromCloud("items", Trail.itemsCompleteHandler);
   };
   Trail.itemsCompleteHandler = __bind(function(event) {
-    var aspect, aspects_xml, data, doc, loader, name, _i, _len, _ref, _results;
+    var aspects_xml, data, doc, loader, name;
     if (Browser) {
       if (event.target.readyState !== 4) {
         return;
@@ -174,6 +232,10 @@
     this.aspects = $.map(aspects_xml, function(aspect, i) {
       return $(aspect).find('id').text();
     });
+    return this.structureRequest();
+  }, this);
+  Trail.getHistory = function() {
+    var aspect, _i, _len, _ref, _results;
     this.history_url = "counts/" + this.aspects[0] + "?grain=200";
     this.history_level = "all";
     Trail.getFromCloud(this.history_url, Trail.historyCompleteHandler);
@@ -187,7 +249,7 @@
       _results.push(Trail.getFromCloud("data/" + aspect, Trail.dataCompleteHandler));
     }
     return _results;
-  }, this);
+  };
   Trail.dataCompleteHandler = __bind(function(event) {
     var data, loader;
     if (Browser) {
@@ -250,12 +312,18 @@
       return Trail.timeline.draw(history);
     }
   }, this);
+  Trail.putToCloud = function(api, handler) {
+    return this.requestOfCloud(api, handler, "POST");
+  };
   Trail.getFromCloud = function(api, handler) {
+    return this.requestOfCloud(api, handler, "GET");
+  };
+  Trail.requestOfCloud = function(api, handler, verb) {
     var loader, req, url;
-    url = "http://greenbean:3000/v1/" + api;
+    url = "http://" + (AppCtl.getOcServer()) + ":" + (AppCtl.getPort()) + "/v1/" + api;
     if (Browser) {
       req = new XMLHttpRequest();
-      req.open("GET", url, true);
+      req.open(verb, url, true);
       req.onreadystatechange = handler;
       req.onprogress = progressHandler;
       return req.send();

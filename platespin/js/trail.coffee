@@ -103,6 +103,53 @@ Trail.draw = ->
     #Draw by downloading
     Trail.download()
 
+Trail.stop = ->
+  Trail.stopReplay()
+
+Trail.stopReplay = ->
+  if @replayRunning?
+    AppReport("Stopping replay #{@replayRunning}")
+    replay_url = "replay-control/#{@replayRunning}?stop=1" 
+    Trail.putToCloud(replay_url,Trail.replayctlResponseHandler)
+    @replayRunning = null
+  else
+    AppReport("No replay running")
+
+Trail.replayctlResponseHandler = ->
+  AppReport("ok")
+
+Trail.replay = ->
+  #using a sub function solves missing structureRequest problem 
+  #just not sure why.
+  Trail.startReplay()
+
+Trail.startReplay = ->
+  AppReport("Starting a Replay")
+  if @replayRunning?
+    AppReport("Replay #{@replayRunning} already running")
+  else
+    @structureRequest = Trail.replayWithStructure
+    Trail.getStructure()
+  
+Trail.replayWithStructure = ->
+  aspect = @aspects[0]
+  AppReport("Starting replay for #{aspect}")
+  replay_url = "replay-create/#{aspect}?start=1&rate=#{AppCtl.getRate()}&gapskip=#{AppCtl.getSkip()}" 
+  Trail.putToCloud(replay_url,Trail.replayResponseHandler)
+
+Trail.replayResponseHandler = (event) =>
+    if (Browser)
+      if event.target.readyState != 4 #Complete (!)
+        return
+      data = event.target.responseText
+    else
+      loader = air.URLLoader(event.target)
+      data = loader.data
+    AppReport("Replay started at node #{data}")
+    valid = new RegExp("/replay/\\d+$")
+    replayid = new RegExp("\\d+$")
+    @replayRunning = replayid.exec(data) if valid.test(data) 
+
 #
 # Clear the canvas
 #
@@ -165,6 +212,10 @@ Trail.saveData = (event) ->
 # Draw the canvas from cloud data
 #
 Trail.download = ->
+  @structureRequest = Trail.getHistory
+  Trail.getStructure()
+
+Trail.getStructure = ->
     AppReport("Fetching Item Structure")
     #Get all visible items
     Trail.getFromCloud("items", Trail.itemsCompleteHandler)
@@ -187,7 +238,9 @@ Trail.itemsCompleteHandler = (event) =>
     @aspects = $.map( aspects_xml, (aspect, i) -> 
       $(aspect).find('id').text()
     )
+    @structureRequest()
 
+Trail.getHistory = ->
     @history_url = "counts/#{@aspects[0]}?grain=200" 
     @history_level = "all"
     Trail.getFromCloud(@history_url, Trail.historyCompleteHandler)
@@ -249,16 +302,22 @@ Trail.historyCompleteHandler = (event) =>
       Trail.timeline.draw(history)
 
 
+Trail.putToCloud = (api, handler) ->
+    this.requestOfCloud(api,handler,"POST")
+
 Trail.getFromCloud = (api, handler) ->
-    #url = "http://#{AppCtl.getOcServer()}:#{AppCtl.getPort()}/v1/#{api}"
-    url = "http://greenbean:3000/v1/#{api}"
+    this.requestOfCloud(api,handler,"GET")
+
+Trail.requestOfCloud = (api, handler, verb) ->
+    url = "http://#{AppCtl.getOcServer()}:#{AppCtl.getPort()}/v1/#{api}"
     if (Browser)
       req = new XMLHttpRequest()
-      req.open("GET",url,true)
+      req.open(verb,url,true)
       req.onreadystatechange = handler
       req.onprogress = progressHandler
       req.send()
     else
+      #TODO - provide air support for post
       req = new air.URLRequest(url)
       loader = new air.URLLoader()
       configureListeners(loader, handler)

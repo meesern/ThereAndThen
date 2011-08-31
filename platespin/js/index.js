@@ -18,6 +18,8 @@ PSUi.Loaded = function()
 
     //Button click
     $('#b_go').click(exports.draw);
+    $('#b_run').click(exports.replay);
+    $('#b_stp').click(exports.stop);
     $('#b_sav').click(exports.save);
     $('#b_clr').click(exports.clear);
 
@@ -30,6 +32,12 @@ PSUi.Loaded = function()
 
     $('#port').attr('value',AppCtl.getPort());
     $('#port').change(function(){AppCtl.setPort($('#port').attr('value'))});
+
+    $('#rate').attr('value',AppCtl.getRate());
+    $('#rate').change(function(){AppCtl.setRate($('#rate').attr('value'))});
+
+    $('#gskip').attr('value',AppCtl.getSkip());
+    $('#gskip').change(function(){AppCtl.setSkip($('#gskip').attr('value'))});
 
     $('#dsfile').attr('checked',AppCtl.getDsFile());
     $('#dsfile').change(function(){AppCtl.setDsFile($('#dsfile').attr('checked'))});

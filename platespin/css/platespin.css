@@ -45,13 +45,6 @@ body {
 #status p {
   margin: 0.5em 0; }
 
-#oc-config fieldset {
-  width: 43%;
-  float: left; }
-
-#oc-config input {
-  width: 98%; }
-
 #history {
   color: white;
   font-size: 0.8em;
@@ -88,3 +81,13 @@ body {
 #selection {
   fill: rgba(34, 102, 0, 0.1);
   stroke: #cccccc; }
+
+#oc-config fieldset {
+  width: 43%;
+  float: left; }
+
+#item, #server, #port, #rate, #gskip {
+  width: 98%; }
+
+.opt_fset label {
+  width: 45%; }
