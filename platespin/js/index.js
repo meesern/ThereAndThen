@@ -18,6 +18,7 @@ PSUi.Loaded = function()
 
     //Button click
     $('#b_go').click(exports.draw);
+    $('#b_ani').click(exports.animate);
     $('#b_run').click(exports.replay);
     $('#b_stp').click(exports.stop);
     $('#b_sav').click(exports.save);

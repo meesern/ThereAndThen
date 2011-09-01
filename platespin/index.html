@@ -23,7 +23,10 @@
   <script src="thirdparty_js/hsv.js"></script>
   <script src="thirdparty_js/pen_min.js"></script>
   <script src="thirdparty_js/d3/d3.js"></script>
+  <script src="thirdparty_js/strophe.min.js"></script> 
+  <script src="thirdparty_js/strophe.pubsub.min.js"></script> 
   <script src="js/index.js"></script>
+  <script src="js/replay.js"></script>
   <script src="js/timeline.js"></script>
   <script src="js/trailtrace.js"></script>
   <script src="js/trail.js"></script>
@@ -33,7 +36,7 @@
   </script>
 </head>
 <body>
-<div style="border-top:1px solid #404040">
+<div id="main" style="border-top:1px solid #404040">
   <ul id="menu">
       <li><a href="#" class="drop">Options</a><!-- Begin Home Item -->
 	  <div id="oc-config" class="dropdown_3columns"><!-- Begin 3 columns container -->
@@ -70,6 +73,7 @@
 	      <div class="col_1">
 		  <p>Draw all the data</p>
 		  <button id = "b_go" class="button blue medium">Fetch</button>
+		  <button id = "b_ani" class="button blue medium">Animate</button>
 		  <hr/>
 		  <p>Replay the data</p>
 		  <button id = "b_run" class="button orange medium">Replay</button>

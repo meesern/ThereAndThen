@@ -15,6 +15,7 @@ Trail.init = ->
   canvas.width = Trail.maxX
   $('#tracker').append(canvas)
   Trail.tt= new Array()
+  Trail.points = new Array()
   Trail.clear()
 
   Trail.timeline = new Trail.TimeLine('#history', Trail.maxX, 
@@ -96,12 +97,21 @@ Trail.markout_trail = (point) ->
 # configured output type.
 #
 Trail.draw = ->
+  Trail.points = []
+  Trail.ments = null
+  Trail.doc = null
   if (AppCtl.getDsFile() == 1)
     #Draw by selecting a file
     Trail.select()
   else
     #Draw by downloading
     Trail.download()
+
+#
+# Button click animate - must be a fetch first
+#
+Trail.animate = ->
+  Trail.timeline.animate()
 
 Trail.stop = ->
   Trail.stopReplay()
@@ -147,8 +157,13 @@ Trail.replayResponseHandler = (event) =>
       data = loader.data
     AppReport("Replay started at node #{data}")
     valid = new RegExp("/replay/\\d+$")
-    replayid = new RegExp("\\d+$")
-    @replayRunning = replayid.exec(data) if valid.test(data) 
+    if (valid.test(data))
+      replayid = new RegExp("\\d+$")
+      @replayRunning = replayid.exec(data)
+      #!!! replay_url = "pubsub.#{AppCtl.getOcServer()}#{data}"
+      Trail.replay = new Trail.Replay(data,Trail)
+    else
+      AppReport("Failed to start replay. Got: #{data}")
 
 #
 # Clear the canvas
@@ -370,21 +385,16 @@ Trail.parse = (data, pstart, pend) ->
   xs = []
   ys = []
   points = []
-  Trail.doc = $.parseXML(data)
+  Trail.doc ||= $.parseXML(data)
   #AppReport("got: #{Trail.doc}")
-  ments = $(Trail.doc).find('marker')
-  AppReport("found #{ments.length} elements")
-  ts = new Date(pstart)
-  te = new Date(pend)
-  ments.each( ->
-    marker = $(this)
-    time = marker.parent().attr('t')
-    t = new Date(time)
-    tmte = t-te
-    tmts = t-ts
-    if (tmts > 0 and tmte < 0)
+  @ments ||= $(Trail.doc).find('marker')
+  AppReport("found #{@ments.length} elements")
+  if (Trail.points.length == 0)
+    @ments.each( ->
+      marker = $(this)
+      time = marker.parent().attr('t')
       code = marker.attr('code')
-      time = marker.attr('timestamp') #time only from xml
+      tstamp = marker.attr('timestamp') #time only from xml
       x1 = parseFloat(marker.attr('x1'))
       x2 = parseFloat(marker.attr('x2'))
       y1 = parseFloat(marker.attr('y1'))
@@ -393,15 +403,27 @@ Trail.parse = (data, pstart, pend) ->
       ys.push(y1)
       xs.push(x2)
       ys.push(y2)
-      points.push([x1,y1,x2,y2,code, time])
-  )
+      Trail.points.push([x1,y1,x2,y2,code,time,tstamp])
+      return true
+    )
+    #xs = [10,20,30,40,50]
+    #ys = [10,20,30,40,50]
+    Trail.set_scale(xs,ys)
 
+  ts = new Date(pstart)
+  te = new Date(pend)
+  for i in [0..(Trail.points.length-1)]
+    point = Trail.points[i]
+    time = point[5]
+    t = new Date(time)
+    tmte = t-te
+    tmts = t-ts
+    #if (tmte >= 0)
+    #  return false
+    if (tmts > 0 and tmte < 0)
+      points.push(point)
   AppReport("found #{points.length} points")
   return unless points.length > 0
-
-  #xs = [10,20,30,40,50]
-  #ys = [10,20,30,40,50]
-  Trail.set_scale(xs,ys)
   points
 
 Trail.visualise = (data, pstart=0, pend=new Date()) ->
@@ -425,19 +447,21 @@ Trail.draw_boxes = (data, pstart, pend) ->
 # visualise bounding box first corner at any one time
 #
 Trail.draw_first_corners = (data, pstart, pend) ->
+  AppReport("Parsing")
   points = Trail.parse(data, pstart, pend)
+  AppReport("Drawing")
   #now we have each point but the corners look like movement
   #if we plot them directly.  Next simplest is to choose only the 
   #first point in any timeframe.
   lasttime = new Array
   for i in [0..(points.length-1)]
     code = points[i]?[4]
-    time = points[i]?[5]
+    time = points[i]?[6]
     if (lasttime[code] != time)
       #AppReport("marking #{i}")
       Trail.markout_trail(points[i])
     lasttime[code] = time
-  AppReport("fc parsed")
+  AppReport("Drawn")
 
 #
 # visualise all bounding box corners

@@ -104,10 +104,18 @@ class root.TimeLine
     @chart = d3.select(@selector).append("svg:svg")
       .attr("class", "chart")
       .attr("height", @divHeight)
+    @animationStep = 3
+    @animationInterval = 200
+    @animationStop = @maxX
   
   clear: ->
     @chart.selectAll('*').remove()
 
+  animate: ->
+    AppReport("Theta Replay")
+    clearInterval(@animationId) if @animationId?
+    this.ani_region_start()
+    @animationId = setInterval(this.ani_frame, @animationInterval)
 
   #draw axis
   frame: ->
@@ -157,8 +165,8 @@ class root.TimeLine
       .attr("y2", @divHeight - 0.5)
       .attr("stroke", "#CCC")
 
-    myregionstart = createBoundedWrapper(this,this.regionstart)
-    myregionend = createBoundedWrapper(this,this.regionend)
+    myregionstart = createBoundedWrapper(this,this.mouse_region_start)
+    myregionend = createBoundedWrapper(this,this.mouse_region_end)
     @chart.on('mousedown', -> 
            myregionstart(this)
       )
@@ -198,9 +206,36 @@ class root.TimeLine
   datefromdata: (point)->
     new Date(point[1],null,point[2],null,point[3],point[4])
 
+  ani_region_start: ->
+    @animationPos = 0
+    this.ani_frame()
+
+  ani_frame: =>
+    this.region_start([@animationPos,0])
+    @animationPos = @animationPos + @animationStep
+    this.region_extend([@animationPos,0])
+    this.region_end()
+    if @animationPos > @animationStop
+      clearInterval(@animationId)
+
   #Select a region of history to display
-  regionstart: (event,d,i)->
+  mouse_region_start: (event,d,i)->
     xy = d3.svg.mouse(event)
+    this.region_start(xy,d,i)
+    myregionextend = createBoundedWrapper(this,this.mouse_region_extend)
+    @chart.on('mousemove', -> 
+           myregionextend(this)
+      )
+    #need jquery for mouseleave event (mouseout too bubbly)
+    myregionend = createBoundedWrapper(this,this.mouse_region_end)
+    $("#{@selector} > svg").mouseleave( ->
+           myregionend(this)
+      )
+
+  #mouse independent for animation
+  region_start: (xy)->
+    @roldx1 = @rx1
+    @roldx2 = @rx2
     if (Math.abs(xy[0]-@rx1) < 3 and @sel)
       #grab and extend @rx1
       @handle = 'start'
@@ -211,7 +246,7 @@ class root.TimeLine
       @rx2 = xy[0]
     else
       @rx1 = @rx2 = xy[0]
-      @handle = 'end'
+      @handle = 'new'
     #AppReport("Mouse x is #{@rx1}")
     @sel ?= @chart.append("svg:rect") 
     @sel.attr('id','selection')
@@ -219,18 +254,12 @@ class root.TimeLine
       .attr("y", 0 )
       .attr("width", @rx2-@rx1)
       .attr("height", @divHeight)
-    myregionextend = createBoundedWrapper(this,this.regionextend)
-    @chart.on('mousemove', -> 
-           myregionextend(this)
-      )
-    #need jquery for mouseleave event (mouseout too bubbly)
-    myregionend = createBoundedWrapper(this,this.regionend)
-    $("#{@selector} > svg").mouseleave( ->
-           myregionend(this)
-      )
 
-  regionextend: (event) ->
+  mouse_region_extend: (event) ->
     xy = d3.svg.mouse(event)
+    this.region_extend(xy)
+
+  region_extend: (xy) ->
     if @handle == 'start'
       @rx1 = xy[0]
     else
@@ -241,15 +270,24 @@ class root.TimeLine
       .attr("x", @rx1)
       .attr("width",@rx2-@rx1)
 
-  regionend: (event) ->
-    #this.regionextend(event)
-    #AppReport("Mouse x now #{@rx2}")
+  mouse_region_end: (event) ->
     @chart.on('mousemove', null)
     $("#{@selector} > svg").unbind('mouseleave')
+    this.region_end()
+
+  region_end: () ->
+    #AppReport("x now #{@rx2}")
     if @rx2 - @rx1 > 1
-      @observer.clear()
-      from = this.timeatpos(@rx1)
-      to = this.timeatpos(@rx2)
+      if (@rx1 == @roldx1 and @rx2 != @roldx2)
+        from = this.timeatpos(@roldx2)
+        to = this.timeatpos(@rx2)
+      else if (@rx1 != @roldx1 and @rx2 == @roldx2)
+        from = this.timeatpos(@rx1)
+        to = this.timeatpos(@roldx1)
+      else
+        @observer.clear()
+        from = this.timeatpos(@rx1)
+        to = this.timeatpos(@rx2)
       @observer.draw_part(from,to)
 
   timeatpos: (x) ->

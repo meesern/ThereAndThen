@@ -84,6 +84,7 @@
       this.maxX = maxX;
       this.maxY = maxY;
       this.observer = observer;
+      this.ani_frame = __bind(this.ani_frame, this);
       this.axis_color = "hsla(0,1%,50%,1)";
       this.graphHeight = 40;
       this.divHeight = this.graphHeight + 4;
@@ -91,9 +92,20 @@
       this.barWidth = 4;
       this.maxSamples = Math.floor(this.graphWidth / this.barWidth);
       this.chart = d3.select(this.selector).append("svg:svg").attr("class", "chart").attr("height", this.divHeight);
+      this.animationStep = 3;
+      this.animationInterval = 200;
+      this.animationStop = this.maxX;
     }
     TimeLine.prototype.clear = function() {
       return this.chart.selectAll('*').remove();
+    };
+    TimeLine.prototype.animate = function() {
+      AppReport("Theta Replay");
+      if (this.animationId != null) {
+        clearInterval(this.animationId);
+      }
+      this.ani_region_start();
+      return this.animationId = setInterval(this.ani_frame, this.animationInterval);
     };
     TimeLine.prototype.frame = function() {};
     TimeLine.prototype.draw = function(data) {
@@ -118,8 +130,8 @@
         return y(d[0]);
       });
       this.chart.append("svg:line").attr("x1", 0).attr("x2", this.barWidth * data.length).attr("y1", this.divHeight - 0.5).attr("y2", this.divHeight - 0.5).attr("stroke", "#CCC");
-      myregionstart = createBoundedWrapper(this, this.regionstart);
-      myregionend = createBoundedWrapper(this, this.regionend);
+      myregionstart = createBoundedWrapper(this, this.mouse_region_start);
+      myregionend = createBoundedWrapper(this, this.mouse_region_end);
       return this.chart.on('mousedown', function() {
         return myregionstart(this);
       }).on('mouseup', function() {
@@ -157,9 +169,36 @@
     TimeLine.prototype.datefromdata = function(point) {
       return new Date(point[1], null, point[2], null, point[3], point[4]);
     };
-    TimeLine.prototype.regionstart = function(event, d, i) {
-      var myregionend, myregionextend, xy, _ref;
+    TimeLine.prototype.ani_region_start = function() {
+      this.animationPos = 0;
+      return this.ani_frame();
+    };
+    TimeLine.prototype.ani_frame = function() {
+      this.region_start([this.animationPos, 0]);
+      this.animationPos = this.animationPos + this.animationStep;
+      this.region_extend([this.animationPos, 0]);
+      this.region_end();
+      if (this.animationPos > this.animationStop) {
+        return clearInterval(this.animationId);
+      }
+    };
+    TimeLine.prototype.mouse_region_start = function(event, d, i) {
+      var myregionend, myregionextend, xy;
       xy = d3.svg.mouse(event);
+      this.region_start(xy, d, i);
+      myregionextend = createBoundedWrapper(this, this.mouse_region_extend);
+      this.chart.on('mousemove', function() {
+        return myregionextend(this);
+      });
+      myregionend = createBoundedWrapper(this, this.mouse_region_end);
+      return $("" + this.selector + " > svg").mouseleave(function() {
+        return myregionend(this);
+      });
+    };
+    TimeLine.prototype.region_start = function(xy) {
+      var _ref;
+      this.roldx1 = this.rx1;
+      this.roldx2 = this.rx2;
       if (Math.abs(xy[0] - this.rx1) < 3 && this.sel) {
         this.handle = 'start';
         this.rx1 = xy[0];
@@ -168,26 +207,22 @@
         this.rx2 = xy[0];
       } else {
         this.rx1 = this.rx2 = xy[0];
-        this.handle = 'end';
+        this.handle = 'new';
       }
             if ((_ref = this.sel) != null) {
         _ref;
       } else {
         this.sel = this.chart.append("svg:rect");
       };
-      this.sel.attr('id', 'selection').attr("x", this.rx1).attr("y", 0).attr("width", this.rx2 - this.rx1).attr("height", this.divHeight);
-      myregionextend = createBoundedWrapper(this, this.regionextend);
-      this.chart.on('mousemove', function() {
-        return myregionextend(this);
-      });
-      myregionend = createBoundedWrapper(this, this.regionend);
-      return $("" + this.selector + " > svg").mouseleave(function() {
-        return myregionend(this);
-      });
+      return this.sel.attr('id', 'selection').attr("x", this.rx1).attr("y", 0).attr("width", this.rx2 - this.rx1).attr("height", this.divHeight);
     };
-    TimeLine.prototype.regionextend = function(event) {
-      var xy, _ref;
+    TimeLine.prototype.mouse_region_extend = function(event) {
+      var xy;
       xy = d3.svg.mouse(event);
+      return this.region_extend(xy);
+    };
+    TimeLine.prototype.region_extend = function(xy) {
+      var _ref;
       if (this.handle === 'start') {
         this.rx1 = xy[0];
       } else {
@@ -198,14 +233,25 @@
       }
       return d3.select("#selection").attr("x", this.rx1).attr("width", this.rx2 - this.rx1);
     };
-    TimeLine.prototype.regionend = function(event) {
-      var from, to;
+    TimeLine.prototype.mouse_region_end = function(event) {
       this.chart.on('mousemove', null);
       $("" + this.selector + " > svg").unbind('mouseleave');
+      return this.region_end();
+    };
+    TimeLine.prototype.region_end = function() {
+      var from, to;
       if (this.rx2 - this.rx1 > 1) {
-        this.observer.clear();
-        from = this.timeatpos(this.rx1);
-        to = this.timeatpos(this.rx2);
+        if (this.rx1 === this.roldx1 && this.rx2 !== this.roldx2) {
+          from = this.timeatpos(this.roldx2);
+          to = this.timeatpos(this.rx2);
+        } else if (this.rx1 !== this.roldx1 && this.rx2 === this.roldx2) {
+          from = this.timeatpos(this.rx1);
+          to = this.timeatpos(this.roldx1);
+        } else {
+          this.observer.clear();
+          from = this.timeatpos(this.rx1);
+          to = this.timeatpos(this.rx2);
+        }
         return this.observer.draw_part(from, to);
       }
     };
