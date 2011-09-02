@@ -19,7 +19,7 @@ class root.TrailTrace
 
   # = makes this a class method
   clear: ->
-    @ctx.fillColor = 'rgba(0,0,0,1)'
+    @ctx.fillStyle = 'rgba(0,0,0,0.0)'
     @ctx.clearRect(0,0,@maxX,@maxY) 
     @ctx.fillRect(0,0,@maxX,@maxY) 
 

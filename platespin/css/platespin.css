@@ -37,9 +37,9 @@ body {
   padding: 10px; }
 
 #tracker {
-  border: 1px solid black;
-  border-radius: 3px;
-  background: #010000;
+  border: 5px solid black;
+  border-radius: 10px;
+  background: url(/img/tracker.png) #010000;
   min-height: 480px; }
 
 #status p {

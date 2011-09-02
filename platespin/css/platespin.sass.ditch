@@ -53,7 +53,7 @@ body
 #tracker
         border:         1px solid darken($tracker_c, 40%)
         border-radius:  3px
-        background:     $tracker_c
+        background:     $tracker_c 
         min-height:     480px
 
 #status p 

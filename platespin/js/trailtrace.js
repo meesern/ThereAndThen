@@ -16,7 +16,7 @@
       this.radius = this.minRadius;
     }
     TrailTrace.prototype.clear = function() {
-      this.ctx.fillColor = 'rgba(0,0,0,1)';
+      this.ctx.fillStyle = 'rgba(0,0,0,0.0)';
       this.ctx.clearRect(0, 0, this.maxX, this.maxY);
       return this.ctx.fillRect(0, 0, this.maxX, this.maxY);
     };
