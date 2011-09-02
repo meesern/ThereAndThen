@@ -24,7 +24,7 @@
       var stroke;
       this.ctx.beginPath();
       this.ctx.lineWidth = 2;
-      stroke = "hsla(" + this.hue + ",95%,80%,0.25)";
+      stroke = "hsla(" + this.hue + ",95%,80%,0.15)";
       this.ctx.strokeStyle = stroke;
       this.ctx.fillStyle = "rgba(0,0,0,0)";
       this.ctx.moveTo(x1, y1);

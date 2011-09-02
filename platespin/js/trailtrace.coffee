@@ -29,7 +29,7 @@ class root.TrailTrace
   squaremark: (x1, y1, x2, y2, xhue) ->
     @ctx.beginPath()
     @ctx.lineWidth = 2
-    stroke = "hsla(#{@hue},95%,80%,0.25)"
+    stroke = "hsla(#{@hue},95%,80%,0.15)"
     @ctx.strokeStyle = stroke
     @ctx.fillStyle = "rgba(0,0,0,0)"
     @ctx.moveTo(x1,y1)
