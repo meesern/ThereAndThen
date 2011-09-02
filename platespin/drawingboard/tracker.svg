@@ -86,12 +86,12 @@
      showgrid="false"
      borderlayer="true"
      inkscape:zoom="0.5"
-     inkscape:cx="461.36882"
+     inkscape:cx="388.99155"
      inkscape:cy="214.75314"
-     inkscape:window-x="153"
-     inkscape:window-y="216"
+     inkscape:window-x="305"
+     inkscape:window-y="204"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer4"
      inkscape:showpageshadow="true"
      showborder="false" />
   <image
@@ -144,7 +144,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="dust"
-     style="opacity:0.8984375;display:none;filter:url(#filter4001)"
+     style="opacity:0.8984375;display:inline;filter:url(#filter4001)"
      sodipodi:insensitive="true">
     <image
        y="-12.018832"
@@ -162,6 +162,6 @@
        sodipodi:rx="504.83871"
        sodipodi:ry="155.64516"
        d="m 1030.6452,282.80646 a 504.83871,155.64516 0 1 1 -1009.677457,0 504.83871,155.64516 0 1 1 1009.677457,0 z"
-       transform="matrix(0.93361765,0,0,1.4507773,-66.350052,-160.54722)" />
+       transform="matrix(0.9587724,0,0,1.7882446,-93.576582,-258.98514)" />
   </g>
 </svg>
