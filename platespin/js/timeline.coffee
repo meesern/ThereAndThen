@@ -104,8 +104,10 @@ class root.TimeLine
     @chart = d3.select(@selector).append("svg:svg")
       .attr("class", "chart")
       .attr("height", @divHeight)
-    @animationStep = 3
-    @animationInterval = 200
+    @animationStep = 2
+    @closeness = 2
+    @aniWidth = 10
+    @animationInterval = 150
     @animationStop = @maxX
   
   clear: ->
@@ -236,14 +238,16 @@ class root.TimeLine
   region_start: (xy)->
     @roldx1 = @rx1
     @roldx2 = @rx2
-    if (Math.abs(xy[0]-@rx1) < 3 and @sel)
+    if (Math.abs(xy[0]-@rx1) < @closeness and @sel)
       #grab and extend @rx1
       @handle = 'start'
       @rx1 = xy[0]
-    else if (Math.abs(xy[0]-@rx2) < 3 and @sel)
+    else if (Math.abs(xy[0]-@rx2) < @closeness and @sel)
       #grab and extend @rx2
       @handle = 'end'
       @rx2 = xy[0]
+      if (@rx2 - @rx1 > @aniWidth)
+        @rx1 = @rx2 - @aniWidth
     else
       @rx1 = @rx2 = xy[0]
       @handle = 'new'
@@ -278,16 +282,9 @@ class root.TimeLine
   region_end: () ->
     #AppReport("x now #{@rx2}")
     if @rx2 - @rx1 > 1
-      if (@rx1 == @roldx1 and @rx2 != @roldx2)
-        from = this.timeatpos(@roldx2)
-        to = this.timeatpos(@rx2)
-      else if (@rx1 != @roldx1 and @rx2 == @roldx2)
-        from = this.timeatpos(@rx1)
-        to = this.timeatpos(@roldx1)
-      else
-        @observer.clear()
-        from = this.timeatpos(@rx1)
-        to = this.timeatpos(@rx2)
+      @observer.clear()
+      from = this.timeatpos(@rx1)
+      to = this.timeatpos(@rx2)
       @observer.draw_part(from,to)
 
   timeatpos: (x) ->

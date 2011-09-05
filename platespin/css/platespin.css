@@ -1,6 +1,20 @@
 body {
   /*background-color: #2a1a0a; */
   background-color: hsl(234,15%,16%); 
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.12, hsl(234,15%,16%)),
+    color-stop(0.60, hsl(234,32%,20%)),
+    color-stop(0.78, hsl(234,15%,16%))
+  );
+  background-image: -moz-linear-gradient(
+    center bottom,
+    hsl(234,15%,16%) 12%,
+    hsl(234,32%,20%) 60%,
+    hsl(234,15%,16%) 78%
+  );
 }
 
 .menu_txt {
@@ -99,3 +113,8 @@ body {
 
 .opt_fset label {
   width: 45%; }
+
+#blob {
+  position: relative;
+  float: right;
+}

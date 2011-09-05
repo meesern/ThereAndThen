@@ -19,11 +19,9 @@
   };
   Trail.trailtrace = function(key) {
     var canvas, _base, _ref;
-        if ((_ref = (_base = Trail.tt)[key]) != null) {
-      _ref;
-    } else {
+    if ((_ref = (_base = Trail.tt)[key]) == null) {
       _base[key] = 'make';
-    };
+    }
     if (Trail.tt[key] === 'make') {
       AppReport("New Trailtrace for " + key);
       canvas = $('canvas')[0];
@@ -393,8 +391,8 @@
     AppReport("found " + points.length + " counts like " + points[0]);
     return points;
   };
-  Trail.parse = function(data, pstart, pend) {
-    var i, lasttime, point, points, t, te, time, tmte, tmts, ts, xs, ys, _ref;
+  Trail.parse = function(data, pstart, pend, type) {
+    var i, lasttime, point, points, t, te, thelot, time, tmte, tmts, ts, xs, ys, _ref;
     AppReport("parsing data from " + pstart + " to " + pend);
     xs = [];
     ys = [];
@@ -429,8 +427,13 @@
     }
     ts = new Date(pstart);
     te = new Date(pend);
-    for (i = 0, _ref = Trail.points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-      point = Trail.points[i];
+    if (type === 'points') {
+      thelot = Trail.points;
+    } else {
+      thelot = Trail.positions;
+    }
+    for (i = 0, _ref = thelot.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+      point = thelot[i];
       time = point[5];
       t = new Date(time);
       tmte = t - te;
@@ -464,7 +467,7 @@
   };
   Trail.draw_boxes = function(data, pstart, pend) {
     var i, points, _ref;
-    points = Trail.parse(data, pstart, pend);
+    points = Trail.parse(data, pstart, pend, 'points');
     for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
       Trail.markout(points[i]);
     }
@@ -473,16 +476,19 @@
   Trail.draw_first_corners = function(data, pstart, pend) {
     var i, points, _ref;
     AppReport("Parsing");
-    points = Trail.parse(data, pstart, pend);
+    points = null;
+    points = Trail.parse(data, pstart, pend, 'positions');
     AppReport("Drawing");
-    for (i = 0, _ref = Trail.positions.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-      Trail.markout_trail(Trail.positions[i]);
+    if (points != null) {
+      for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+        Trail.markout_trail(points[i]);
+      }
     }
     return AppReport("Drawn");
   };
   Trail.draw_corners = function(data, pstart, pend) {
     var i, points, _ref;
-    points = Trail.parse(data, pstart, pend);
+    points = Trail.parse(data, pstart, pend, 'points');
     for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
       Trail.markout_trail(points[i]);
     }

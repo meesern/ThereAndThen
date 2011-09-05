@@ -24,7 +24,7 @@
       var stroke;
       this.ctx.beginPath();
       this.ctx.lineWidth = 2;
-      stroke = "hsla(" + this.hue + ",95%,80%,0.15)";
+      stroke = "hsla(" + this.hue + ",95%,80%,0.25)";
       this.ctx.strokeStyle = stroke;
       this.ctx.fillStyle = "rgba(0,0,0,0)";
       this.ctx.moveTo(x1, y1);
@@ -38,7 +38,7 @@
     };
     TrailTrace.prototype.mark = function(x, y, xhue) {
       var dx, dy;
-      this.color = "hsla(" + this.hue + ",100%,70%,0.33)";
+      this.color = "hsla(" + this.hue + ",100%,70%,0.6)";
       dx = x - this.x;
       dy = y - this.y;
       this.x = x;

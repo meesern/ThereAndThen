@@ -92,8 +92,10 @@
       this.barWidth = 4;
       this.maxSamples = Math.floor(this.graphWidth / this.barWidth);
       this.chart = d3.select(this.selector).append("svg:svg").attr("class", "chart").attr("height", this.divHeight);
-      this.animationStep = 3;
-      this.animationInterval = 200;
+      this.animationStep = 2;
+      this.closeness = 2;
+      this.aniWidth = 10;
+      this.animationInterval = 150;
       this.animationStop = this.maxX;
     }
     TimeLine.prototype.clear = function() {
@@ -199,21 +201,22 @@
       var _ref;
       this.roldx1 = this.rx1;
       this.roldx2 = this.rx2;
-      if (Math.abs(xy[0] - this.rx1) < 3 && this.sel) {
+      if (Math.abs(xy[0] - this.rx1) < this.closeness && this.sel) {
         this.handle = 'start';
         this.rx1 = xy[0];
-      } else if (Math.abs(xy[0] - this.rx2) < 3 && this.sel) {
+      } else if (Math.abs(xy[0] - this.rx2) < this.closeness && this.sel) {
         this.handle = 'end';
         this.rx2 = xy[0];
+        if (this.rx2 - this.rx1 > this.aniWidth) {
+          this.rx1 = this.rx2 - this.aniWidth;
+        }
       } else {
         this.rx1 = this.rx2 = xy[0];
         this.handle = 'new';
       }
-            if ((_ref = this.sel) != null) {
-        _ref;
-      } else {
+      if ((_ref = this.sel) == null) {
         this.sel = this.chart.append("svg:rect");
-      };
+      }
       return this.sel.attr('id', 'selection').attr("x", this.rx1).attr("y", 0).attr("width", this.rx2 - this.rx1).attr("height", this.divHeight);
     };
     TimeLine.prototype.mouse_region_extend = function(event) {
@@ -241,17 +244,9 @@
     TimeLine.prototype.region_end = function() {
       var from, to;
       if (this.rx2 - this.rx1 > 1) {
-        if (this.rx1 === this.roldx1 && this.rx2 !== this.roldx2) {
-          from = this.timeatpos(this.roldx2);
-          to = this.timeatpos(this.rx2);
-        } else if (this.rx1 !== this.roldx1 && this.rx2 === this.roldx2) {
-          from = this.timeatpos(this.rx1);
-          to = this.timeatpos(this.roldx1);
-        } else {
-          this.observer.clear();
-          from = this.timeatpos(this.rx1);
-          to = this.timeatpos(this.rx2);
-        }
+        this.observer.clear();
+        from = this.timeatpos(this.rx1);
+        to = this.timeatpos(this.rx2);
         return this.observer.draw_part(from, to);
       }
     };

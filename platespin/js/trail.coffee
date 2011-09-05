@@ -384,7 +384,7 @@ Trail.history_parse = (data) ->
   points
 
 
-Trail.parse = (data, pstart, pend) ->
+Trail.parse = (data, pstart, pend, type) ->
   AppReport("parsing data from #{pstart} to #{pend}")
   xs = []
   ys = []
@@ -420,8 +420,12 @@ Trail.parse = (data, pstart, pend) ->
 
   ts = new Date(pstart)
   te = new Date(pend)
-  for i in [0..(Trail.points.length-1)]
-    point = Trail.points[i]
+  if (type == 'points')
+    thelot = Trail.points
+  else
+    thelot = Trail.positions
+  for i in [0..(thelot.length-1)]
+    point = thelot[i]
     time = point[5]
     t = new Date(time)
     tmte = t-te
@@ -445,32 +449,34 @@ Trail.visualise = (data, pstart=0, pend=new Date()) ->
 
 #Draw boxes
 Trail.draw_boxes = (data, pstart, pend) ->
-  points = Trail.parse(data, pstart, pend)
+  points = Trail.parse(data, pstart, pend,'points')
   for i in [0..(points.length-1)]
     #AppReport("marking #{i}")
     Trail.markout(points[i])
   AppReport("parsed")
 
-#
+# 
 # visualise bounding box first corner at any one time
 #
 Trail.draw_first_corners = (data, pstart, pend) ->
   AppReport("Parsing")
-  points = Trail.parse(data, pstart, pend)
+  points = null
+  points = Trail.parse(data, pstart, pend,'positions')
   AppReport("Drawing")
   #now we have each point but the corners look like movement
   #if we plot them directly.  Next simplest is to choose only the 
   #first point in any timeframe.
-  for i in [0..(Trail.positions.length-1)]
-      #AppReport("marking #{i}")
-      Trail.markout_trail(Trail.positions[i])
+  if points?
+    for i in [0..(points.length-1)]
+        #AppReport("marking #{i}")
+        Trail.markout_trail(points[i])
   AppReport("Drawn")
 
 #
 # visualise all bounding box corners
 #
 Trail.draw_corners = (data, pstart, pend) ->
-  points = Trail.parse(data, pstart, pend)
+  points = Trail.parse(data, pstart, pend,'points')
   #now we have each point but the corners look like movement
   #if we plot them directly.  Next simplest is to choose only the 
   #first pont in any timeframe.
