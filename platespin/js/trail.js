@@ -11,7 +11,7 @@
     canvas.width = Trail.maxX;
     $('#tracker').append(canvas);
     Trail.tt = new Array();
-    Trail.points = new Array();
+    Trail.freshdata();
     Trail.clear();
     Trail.timeline = new Trail.TimeLine('#history', Trail.maxX, 30, Trail);
     Trail.timeline.clear();
@@ -89,14 +89,18 @@
     return Trail.trailtrace(code).mark(Trail.xcentering + (x1 + Trail.xoffset) * Trail.scale, Trail.ycentering + (y1 + Trail.yoffset) * Trail.scale, Trail.huefromcode(code));
   };
   Trail.draw = function() {
-    Trail.points = [];
-    Trail.ments = null;
-    Trail.doc = null;
+    Trail.freshdata();
     if (AppCtl.getDsFile() === 1) {
       return Trail.select();
     } else {
       return Trail.download();
     }
+  };
+  Trail.freshdata = function() {
+    Trail.points = [];
+    Trail.positions = [];
+    Trail.ments = null;
+    return Trail.doc = null;
   };
   Trail.animate = function() {
     return Trail.timeline.animate();
@@ -390,7 +394,7 @@
     return points;
   };
   Trail.parse = function(data, pstart, pend) {
-    var i, point, points, t, te, time, tmte, tmts, ts, xs, ys, _ref;
+    var i, lasttime, point, points, t, te, time, tmte, tmts, ts, xs, ys, _ref;
     AppReport("parsing data from " + pstart + " to " + pend);
     xs = [];
     ys = [];
@@ -399,6 +403,7 @@
     this.ments || (this.ments = $(Trail.doc).find('marker'));
     AppReport("found " + this.ments.length + " elements");
     if (Trail.points.length === 0) {
+      lasttime = [];
       this.ments.each(function() {
         var code, marker, time, tstamp, x1, x2, y1, y2;
         marker = $(this);
@@ -414,6 +419,10 @@
         xs.push(x2);
         ys.push(y2);
         Trail.points.push([x1, y1, x2, y2, code, time, tstamp]);
+        if (lasttime[code] !== tstamp) {
+          lasttime[code] = tstamp;
+          Trail.positions.push([x1, y1, x2, y2, code, time, tstamp]);
+        }
         return true;
       });
       Trail.set_scale(xs, ys);
@@ -462,18 +471,12 @@
     return AppReport("parsed");
   };
   Trail.draw_first_corners = function(data, pstart, pend) {
-    var code, i, lasttime, points, time, _ref, _ref2, _ref3;
+    var i, points, _ref;
     AppReport("Parsing");
     points = Trail.parse(data, pstart, pend);
     AppReport("Drawing");
-    lasttime = new Array;
-    for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-      code = (_ref2 = points[i]) != null ? _ref2[4] : void 0;
-      time = (_ref3 = points[i]) != null ? _ref3[6] : void 0;
-      if (lasttime[code] !== time) {
-        Trail.markout_trail(points[i]);
-      }
-      lasttime[code] = time;
+    for (i = 0, _ref = Trail.positions.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+      Trail.markout_trail(Trail.positions[i]);
     }
     return AppReport("Drawn");
   };

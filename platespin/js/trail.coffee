@@ -15,7 +15,7 @@ Trail.init = ->
   canvas.width = Trail.maxX
   $('#tracker').append(canvas)
   Trail.tt= new Array()
-  Trail.points = new Array()
+  Trail.freshdata()
   Trail.clear()
 
   Trail.timeline = new Trail.TimeLine('#history', Trail.maxX, 
@@ -97,15 +97,19 @@ Trail.markout_trail = (point) ->
 # configured output type.
 #
 Trail.draw = ->
-  Trail.points = []
-  Trail.ments = null
-  Trail.doc = null
+  Trail.freshdata()
   if (AppCtl.getDsFile() == 1)
     #Draw by selecting a file
     Trail.select()
   else
     #Draw by downloading
     Trail.download()
+
+Trail.freshdata = ->
+  Trail.points = []
+  Trail.positions = []
+  Trail.ments = null
+  Trail.doc = null
 
 #
 # Button click animate - must be a fetch first
@@ -390,6 +394,7 @@ Trail.parse = (data, pstart, pend) ->
   @ments ||= $(Trail.doc).find('marker')
   AppReport("found #{@ments.length} elements")
   if (Trail.points.length == 0)
+    lasttime = []
     @ments.each( ->
       marker = $(this)
       time = marker.parent().attr('t')
@@ -404,6 +409,9 @@ Trail.parse = (data, pstart, pend) ->
       xs.push(x2)
       ys.push(y2)
       Trail.points.push([x1,y1,x2,y2,code,time,tstamp])
+      if (lasttime[code] != tstamp)
+        lasttime[code] = tstamp
+        Trail.positions.push([x1,y1,x2,y2,code,time,tstamp])
       return true
     )
     #xs = [10,20,30,40,50]
@@ -453,14 +461,9 @@ Trail.draw_first_corners = (data, pstart, pend) ->
   #now we have each point but the corners look like movement
   #if we plot them directly.  Next simplest is to choose only the 
   #first point in any timeframe.
-  lasttime = new Array
-  for i in [0..(points.length-1)]
-    code = points[i]?[4]
-    time = points[i]?[6]
-    if (lasttime[code] != time)
+  for i in [0..(Trail.positions.length-1)]
       #AppReport("marking #{i}")
-      Trail.markout_trail(points[i])
-    lasttime[code] = time
+      Trail.markout_trail(Trail.positions[i])
   AppReport("Drawn")
 
 #
