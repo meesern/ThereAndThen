@@ -13,6 +13,7 @@
     Trail.tt = new Array();
     Trail.freshdata();
     Trail.clear();
+    Trail.rpstream = "<stream></stream>";
     Trail.timeline = new Trail.TimeLine('#history', Trail.maxX, 30, Trail);
     Trail.timeline.clear();
     return Trail.timeline.frame();
@@ -124,7 +125,11 @@
     return Trail.startReplay();
   };
   Trail.startReplay = function() {
+    var data;
     AppReport("Starting a Replay");
+    data = "/home/greenbean/whathappened/replay/65";
+    Trail.replay = new Trail.Replay(AppCtl.getOcServer(), data, Trail);
+    return;
     if (this.replayRunning != null) {
       return AppReport("Replay " + this.replayRunning + " already running");
     } else {
@@ -155,7 +160,7 @@
     if (valid.test(data)) {
       replayid = new RegExp("\\d+$");
       this.replayRunning = replayid.exec(data);
-      return Trail.replay = new Trail.Replay(data, Trail);
+      return Trail.replay = new Trail.Replay(AppCtl.getOcServer(), data, Trail);
     } else {
       return AppReport("Failed to start replay. Got: " + data);
     }
@@ -468,8 +473,10 @@
   Trail.draw_boxes = function(data, pstart, pend) {
     var i, points, _ref;
     points = Trail.parse(data, pstart, pend, 'points');
-    for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-      Trail.markout(points[i]);
+    if (points != null) {
+      for (i = 0, _ref = points.length - 1; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+        Trail.markout(points[i]);
+      }
     }
     return AppReport("parsed");
   };
@@ -496,6 +503,17 @@
   };
   Trail.draw_part = function(pstart, pend) {
     return Trail.visualise(Trail.data, pstart, pend);
+  };
+  Trail.stream_in = function(message) {
+    var data;
+    AppReport("Stream Data");
+    Trail.rpstream = $(Trail.rpstream).append(message);
+    data = (new XMLSerializer()).serializeToString(Trail.rpstream[0]);
+    Trail.freshdata();
+    Trail.clear();
+    Trail.extend = true;
+    Trail.visualise(data);
+    return Trail.extend = false;
   };
   configureListeners = function(dispatcher, complete) {
     dispatcher.addEventListener(air.Event.COMPLETE, complete);

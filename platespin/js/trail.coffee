@@ -17,6 +17,7 @@ Trail.init = ->
   Trail.tt= new Array()
   Trail.freshdata()
   Trail.clear()
+  Trail.rpstream = "<stream></stream>"
 
   Trail.timeline = new Trail.TimeLine('#history', Trail.maxX, 
                           30, Trail)
@@ -139,6 +140,12 @@ Trail.replay = ->
 
 Trail.startReplay = ->
   AppReport("Starting a Replay")
+  #!!!!!
+  data = "/home/greenbean/whathappened/replay/65"
+  Trail.replay = new Trail.Replay(AppCtl.getOcServer(),data,Trail)
+  return
+  #!!!!!
+
   if @replayRunning?
     AppReport("Replay #{@replayRunning} already running")
   else
@@ -165,7 +172,7 @@ Trail.replayResponseHandler = (event) =>
       replayid = new RegExp("\\d+$")
       @replayRunning = replayid.exec(data)
       #!!! replay_url = "pubsub.#{AppCtl.getOcServer()}#{data}"
-      Trail.replay = new Trail.Replay(data,Trail)
+      Trail.replay = new Trail.Replay(AppCtl.getOcServer(),data,Trail)
     else
       AppReport("Failed to start replay. Got: #{data}")
 
@@ -450,9 +457,10 @@ Trail.visualise = (data, pstart=0, pend=new Date()) ->
 #Draw boxes
 Trail.draw_boxes = (data, pstart, pend) ->
   points = Trail.parse(data, pstart, pend,'points')
-  for i in [0..(points.length-1)]
-    #AppReport("marking #{i}")
-    Trail.markout(points[i])
+  if points?
+    for i in [0..(points.length-1)]
+      #AppReport("marking #{i}")
+      Trail.markout(points[i])
   AppReport("parsed")
 
 # 
@@ -489,6 +497,18 @@ Trail.draw_corners = (data, pstart, pend) ->
 # Draw a proportion of the total history
 Trail.draw_part = (pstart, pend)->
   Trail.visualise(Trail.data, pstart, pend)
+
+# Called from replay
+Trail.stream_in = (message) ->
+  AppReport("Stream Data")
+  Trail.rpstream = $(Trail.rpstream).append(message)
+  #!!!! This is a loony step, but I can't find another way
+  data = (new XMLSerializer()).serializeToString(Trail.rpstream[0])
+  Trail.freshdata()
+  Trail.clear()
+  Trail.extend = true
+  Trail.visualise(data)
+  Trail.extend = false
 
 configureListeners = (dispatcher, complete) ->
     dispatcher.addEventListener(air.Event.COMPLETE, complete)

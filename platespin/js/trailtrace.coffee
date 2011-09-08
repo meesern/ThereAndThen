@@ -71,6 +71,7 @@ class root.TrailTrace
   circle: (x,y,r)->
     #AppReport("circle #{x},#{y},#{r}")
     @ctx.beginPath()
+    @ctx.lineWidth = 2
     @ctx.strokeStyle = @color 
     @ctx.fillStyle = "rgba(80,80,80,0.02)"
     @ctx.arc(x, y, r, 0, Math.PI * 2, false)

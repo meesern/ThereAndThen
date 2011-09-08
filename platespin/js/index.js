@@ -69,7 +69,7 @@ function createBoundedWrapper(object, method)
 
 function AppReport(message)
 {
-  $("<p>"+message+"</p>").appendTo('#status')
+  $("<p>"+htmlEntities(message)+"</p>").appendTo('#status')
   $('#status').scrollTop($('#status')[0].scrollHeight);
 
   if (Browser)
@@ -124,4 +124,20 @@ function d3play()
     .attr("y2", h - 0.5)
     .attr("stroke", "#000");
 }
+
+/* Sadly have to hack in our own for javascript */
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* Need this to re-establish the context - sadly no breakpoints from here */
+function Replay_on_connect(status) {
+  return exports.replay.on_connect(status);
+};
+function Replay_on_event(message) {
+  return exports.replay.on_event(message);
+};
+function Replay_on_subscribe(message) {
+  return exports.replay.on_subscribe(message);
+};
 

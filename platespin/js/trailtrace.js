@@ -72,6 +72,7 @@
     };
     TrailTrace.prototype.circle = function(x, y, r) {
       this.ctx.beginPath();
+      this.ctx.lineWidth = 2;
       this.ctx.strokeStyle = this.color;
       this.ctx.fillStyle = "rgba(80,80,80,0.02)";
       this.ctx.arc(x, y, r, 0, Math.PI * 2, false);
