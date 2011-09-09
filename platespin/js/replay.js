@@ -33,7 +33,11 @@
       }
     };
     Replay.prototype.handle_update = function(data) {
-      var m;
+      var m, stopped;
+      stopped = $(data).find('replay_control').attr('stopped');
+      if (stopped != null) {
+        this.observer.replayStopped();
+      }
       m = $(data).find('ment');
       if (m != null) {
         return this.observer.stream_in(m);

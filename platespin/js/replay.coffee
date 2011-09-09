@@ -31,6 +31,9 @@ class root.Replay
   # decide what to do with an incoming message
   # data is query result
   handle_update: (data) ->
+    stopped = $(data).find('replay_control').attr('stopped')
+    if stopped?
+      @observer.replayStopped()
     m = $(data).find('ment')
     if m?
       @observer.stream_in(m)

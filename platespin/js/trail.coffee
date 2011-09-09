@@ -24,6 +24,10 @@ Trail.init = ->
   Trail.timeline.clear()
   Trail.timeline.frame()
   #Get history (from cloud)
+  #default scale
+  xs = [0,620]
+  ys = [0,600]
+  Trail.set_scale(xs,ys)
 
 #
 # New trailtrace with hash
@@ -126,9 +130,13 @@ Trail.stopReplay = ->
     AppReport("Stopping replay #{@replayRunning}")
     replay_url = "replay-control/#{@replayRunning}?stop=1" 
     Trail.putToCloud(replay_url,Trail.replayctlResponseHandler)
-    @replayRunning = null
+    Trail.replayStopped()
   else
     AppReport("No replay running")
+
+Trail.replayStopped = ->
+    AppReport("Replay stopped")
+    @replayRunning = null
 
 Trail.replayctlResponseHandler = ->
   AppReport("ok")
@@ -140,11 +148,6 @@ Trail.replay = ->
 
 Trail.startReplay = ->
   AppReport("Starting a Replay")
-  #!!!!!
-  data = "/home/greenbean/whathappened/replay/65"
-  Trail.replay = new Trail.Replay(AppCtl.getOcServer(),data,Trail)
-  return
-  #!!!!!
 
   if @replayRunning?
     AppReport("Replay #{@replayRunning} already running")
@@ -400,6 +403,7 @@ Trail.parse = (data, pstart, pend, type) ->
   #AppReport("got: #{Trail.doc}")
   @ments ||= $(Trail.doc).find('marker')
   AppReport("found #{@ments.length} elements")
+  return if (@ments.length == 0)
   if (Trail.points.length == 0)
     lasttime = []
     @ments.each( ->
@@ -423,7 +427,7 @@ Trail.parse = (data, pstart, pend, type) ->
     )
     #xs = [10,20,30,40,50]
     #ys = [10,20,30,40,50]
-    Trail.set_scale(xs,ys)
+    Trail.set_scale(xs,ys) unless Trail.extend
 
   ts = new Date(pstart)
   te = new Date(pend)
@@ -501,11 +505,13 @@ Trail.draw_part = (pstart, pend)->
 # Called from replay
 Trail.stream_in = (message) ->
   AppReport("Stream Data")
-  Trail.rpstream = $(Trail.rpstream).append(message)
-  #!!!! This is a loony step, but I can't find another way
-  data = (new XMLSerializer()).serializeToString(Trail.rpstream[0])
+  #Trail.rpstream = $(Trail.rpstream).append(message)
+  ##!!!! This is a loony step, but I can't find another way
+  #data = (new XMLSerializer()).serializeToString(Trail.rpstream[0])
   Trail.freshdata()
-  Trail.clear()
+  #Trail.clear()
+  rpstream = $(Trail.rpstream).append(message)
+  data = (new XMLSerializer()).serializeToString(rpstream[0])
   Trail.extend = true
   Trail.visualise(data)
   Trail.extend = false

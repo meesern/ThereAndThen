@@ -3,7 +3,7 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Trail = typeof exports !== "undefined" && exports !== null ? exports : this;
   Trail.init = function() {
-    var canvas;
+    var canvas, xs, ys;
     canvas = document.createElement('canvas');
     Trail.maxY = 400.0;
     Trail.maxX = 600.0;
@@ -16,7 +16,10 @@
     Trail.rpstream = "<stream></stream>";
     Trail.timeline = new Trail.TimeLine('#history', Trail.maxX, 30, Trail);
     Trail.timeline.clear();
-    return Trail.timeline.frame();
+    Trail.timeline.frame();
+    xs = [0, 620];
+    ys = [0, 600];
+    return Trail.set_scale(xs, ys);
   };
   Trail.trailtrace = function(key) {
     var canvas, _base, _ref;
@@ -113,10 +116,14 @@
       AppReport("Stopping replay " + this.replayRunning);
       replay_url = "replay-control/" + this.replayRunning + "?stop=1";
       Trail.putToCloud(replay_url, Trail.replayctlResponseHandler);
-      return this.replayRunning = null;
+      return Trail.replayStopped();
     } else {
       return AppReport("No replay running");
     }
+  };
+  Trail.replayStopped = function() {
+    AppReport("Replay stopped");
+    return this.replayRunning = null;
   };
   Trail.replayctlResponseHandler = function() {
     return AppReport("ok");
@@ -125,11 +132,7 @@
     return Trail.startReplay();
   };
   Trail.startReplay = function() {
-    var data;
     AppReport("Starting a Replay");
-    data = "/home/greenbean/whathappened/replay/65";
-    Trail.replay = new Trail.Replay(AppCtl.getOcServer(), data, Trail);
-    return;
     if (this.replayRunning != null) {
       return AppReport("Replay " + this.replayRunning + " already running");
     } else {
@@ -405,6 +408,9 @@
     Trail.doc || (Trail.doc = $.parseXML(data));
     this.ments || (this.ments = $(Trail.doc).find('marker'));
     AppReport("found " + this.ments.length + " elements");
+    if (this.ments.length === 0) {
+      return;
+    }
     if (Trail.points.length === 0) {
       lasttime = [];
       this.ments.each(function() {
@@ -428,7 +434,9 @@
         }
         return true;
       });
-      Trail.set_scale(xs, ys);
+      if (!Trail.extend) {
+        Trail.set_scale(xs, ys);
+      }
     }
     ts = new Date(pstart);
     te = new Date(pend);
@@ -505,12 +513,11 @@
     return Trail.visualise(Trail.data, pstart, pend);
   };
   Trail.stream_in = function(message) {
-    var data;
+    var data, rpstream;
     AppReport("Stream Data");
-    Trail.rpstream = $(Trail.rpstream).append(message);
-    data = (new XMLSerializer()).serializeToString(Trail.rpstream[0]);
     Trail.freshdata();
-    Trail.clear();
+    rpstream = $(Trail.rpstream).append(message);
+    data = (new XMLSerializer()).serializeToString(rpstream[0]);
     Trail.extend = true;
     Trail.visualise(data);
     return Trail.extend = false;

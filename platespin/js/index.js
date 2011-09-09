@@ -56,6 +56,7 @@ PSUi.Loaded = function()
     $('#ofcorner').change(function(){AppCtl.setOfCorner($('#ofcorner').attr('checked'))});
 
     AppReport("Creating Canvas");
+    exports.scrollable = true;
     exports.init();
     //d3play();
 };
@@ -70,7 +71,11 @@ function createBoundedWrapper(object, method)
 function AppReport(message)
 {
   $("<p>"+htmlEntities(message)+"</p>").appendTo('#status')
-  $('#status').scrollTop($('#status')[0].scrollHeight);
+  if (exports.scrollable)
+  {
+    exports.scrollable = false
+    setTimeout("scrollStatus()",1000);
+  }
 
   if (Browser)
   {
@@ -83,6 +88,13 @@ function AppReport(message)
   }
 }
 
+
+/*Scrolling is expensive so only once a second */
+function scrollStatus()
+{
+  $('#status').scrollTop($('#status')[0].scrollHeight);
+  exports.scrollable = true;
+}
 
 function d3play()
 {
