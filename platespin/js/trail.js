@@ -142,7 +142,7 @@
   };
   Trail.replayWithStructure = function() {
     var aspect, replay_url;
-    aspect = this.aspects[0];
+    aspect = this.aspects[1];
     AppReport("Starting replay for " + aspect);
     replay_url = "replay-create/" + aspect + "?start=1&rate=" + (AppCtl.getRate()) + "&gapskip=" + (AppCtl.getSkip());
     return Trail.putToCloud(replay_url, Trail.replayResponseHandler);

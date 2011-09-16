@@ -156,7 +156,8 @@ Trail.startReplay = ->
     Trail.getStructure()
   
 Trail.replayWithStructure = ->
-  aspect = @aspects[0]
+  #Bodge because aspect 0 is garbage
+  aspect = @aspects[1]
   AppReport("Starting replay for #{aspect}")
   replay_url = "replay-create/#{aspect}?start=1&rate=#{AppCtl.getRate()}&gapskip=#{AppCtl.getSkip()}" 
   Trail.putToCloud(replay_url,Trail.replayResponseHandler)
@@ -270,7 +271,7 @@ Trail.itemsCompleteHandler = (event) =>
     @structureRequest()
 
 Trail.getHistory = ->
-    #Fudge - don't count the first aspect as it could be garbage
+    #Skip the first as it might be garbage!
     @history_url = "counts/#{@aspects[1]}?grain=200" 
     @history_level = "all"
     Trail.getFromCloud(@history_url, Trail.historyCompleteHandler)
