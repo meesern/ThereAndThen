@@ -270,7 +270,8 @@ Trail.itemsCompleteHandler = (event) =>
     @structureRequest()
 
 Trail.getHistory = ->
-    @history_url = "counts/#{@aspects[0]}?grain=200" 
+    #Fudge - don't count the first aspect as it could be garbage
+    @history_url = "counts/#{@aspects[1]}?grain=200" 
     @history_level = "all"
     Trail.getFromCloud(@history_url, Trail.historyCompleteHandler)
 

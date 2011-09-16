@@ -12,11 +12,11 @@
       this.raw_input = __bind(this.raw_input, this);
       this.pubsub_server = 'pubsub.' + this.server;
       AppReport("Subscribing to " + this.pubsub_server + ", " + this.subnode);
-      boshService = "http://" + this.server + ":5280/http-bind";
+      boshService = "http://" + this.server + "/http-bind";
       this.connection = new Strophe.Connection(boshService);
       this.connection.rawInput = this.raw_input;
       this.connection.rawOutput = this.raw_output;
-      this.clientJid = "test@greenbean";
+      this.clientJid = "test@" + this.server;
       this.connection.connect(this.clientJid, 'jabber', Replay_on_connect);
     }
     Replay.prototype.connection = null;

@@ -6,11 +6,11 @@ class root.Replay
   constructor: (@server,@subnode,@observer) ->
     @pubsub_server = 'pubsub.' + @server
     AppReport("Subscribing to #{@pubsub_server}, #{@subnode}")
-    boshService = "http://#{@server}:5280/http-bind"
+    boshService = "http://#{@server}/http-bind"
     @connection = new Strophe.Connection(boshService)
     @connection.rawInput = @raw_input
     @connection.rawOutput = @raw_output
-    @clientJid = "test@greenbean"
+    @clientJid = "test@#{@server}"
     @connection.connect(@clientJid, 'jabber', Replay_on_connect)
 
   connection: null

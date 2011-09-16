@@ -256,7 +256,7 @@
   }, this);
   Trail.getHistory = function() {
     var aspect, _i, _len, _ref, _results;
-    this.history_url = "counts/" + this.aspects[0] + "?grain=200";
+    this.history_url = "counts/" + this.aspects[1] + "?grain=200";
     this.history_level = "all";
     Trail.getFromCloud(this.history_url, Trail.historyCompleteHandler);
     AppReport("Fetching History & Data");

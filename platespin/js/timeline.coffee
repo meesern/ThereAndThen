@@ -184,28 +184,31 @@ class root.TimeLine
     sfrac = start = middle = end = di = 0
     d = []
     datastep = data.length / size
-    for [1..size]
+    while (di < data.length)
       early = this.datefromdata(data[di])
       mcount = Math.floor(datastep-sfrac)
       efrac  = datastep - mcount - sfrac
       s = parseFloat(data[di][0]) * sfrac
       di++ unless sfrac == 0
       m=0
-      while mcount--
-        m += parseFloat(data[di++][0])
-      if efrac != 0
-        e = parseFloat(data[di][0]) * efrac 
-      else
-        e = 0
-      late = this.datefromdata(data[di])
-      d.push([s+m+e,early,late])
-      sfrac = Math.min((1 - efrac),datastep)
+      if (di < data.length)
+        while mcount--
+          m += parseFloat(data[di++][0])
+          return d unless (di < data.length)
+        if efrac != 0
+          e = parseFloat(data[di][0]) * efrac 
+        else
+          e = 0
+        late = this.datefromdata(data[di])
+        d.push([s+m+e,early,late])
+        sfrac = Math.min((1 - efrac),datastep)
     d
 
   #[<val>,<year>,<yday>,<dmin>,<sec>]  
   #....
   # Date object
   datefromdata: (point)->
+    return null unless point?
     new Date(point[1],null,point[2],null,point[3],point[4])
 
   ani_region_start: ->

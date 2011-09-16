@@ -141,11 +141,11 @@
       });
     };
     TimeLine.prototype.mush = function(data, size) {
-      var d, datastep, di, e, early, efrac, end, late, m, mcount, middle, s, sfrac, start, _i;
+      var d, datastep, di, e, early, efrac, end, late, m, mcount, middle, s, sfrac, start;
       sfrac = start = middle = end = di = 0;
       d = [];
       datastep = data.length / size;
-      for (_i = 1; 1 <= size ? _i <= size : _i >= size; 1 <= size ? _i++ : _i--) {
+      while (di < data.length) {
         early = this.datefromdata(data[di]);
         mcount = Math.floor(datastep - sfrac);
         efrac = datastep - mcount - sfrac;
@@ -154,21 +154,29 @@
           di++;
         }
         m = 0;
-        while (mcount--) {
-          m += parseFloat(data[di++][0]);
+        if (di < data.length) {
+          while (mcount--) {
+            m += parseFloat(data[di++][0]);
+            if (!(di < data.length)) {
+              return d;
+            }
+          }
+          if (efrac !== 0) {
+            e = parseFloat(data[di][0]) * efrac;
+          } else {
+            e = 0;
+          }
+          late = this.datefromdata(data[di]);
+          d.push([s + m + e, early, late]);
+          sfrac = Math.min(1 - efrac, datastep);
         }
-        if (efrac !== 0) {
-          e = parseFloat(data[di][0]) * efrac;
-        } else {
-          e = 0;
-        }
-        late = this.datefromdata(data[di]);
-        d.push([s + m + e, early, late]);
-        sfrac = Math.min(1 - efrac, datastep);
       }
       return d;
     };
     TimeLine.prototype.datefromdata = function(point) {
+      if (point == null) {
+        return null;
+      }
       return new Date(point[1], null, point[2], null, point[3], point[4]);
     };
     TimeLine.prototype.ani_region_start = function() {
