@@ -6,7 +6,12 @@ class root.Replay
   constructor: (@server,@subnode,@observer) ->
     @pubsub_server = 'pubsub.' + @server
     AppReport("Subscribing to #{@pubsub_server}, #{@subnode}")
-    boshService = "http://#{@server}/http-bind"
+    port_ext = ""
+    #Nasty hack - bosh port only on local network
+    port_ext = ':5280' unless /\./.exec(@server)
+
+    boshService = "http://#{@server+port_ext}/http-bind"
+    AppReport("via #{boshService}")
     @connection = new Strophe.Connection(boshService)
     @connection.rawInput = @raw_input
     @connection.rawOutput = @raw_output
@@ -72,6 +77,9 @@ class root.Replay
       AppReport("Connected")
       @connection.send($pres().c('priority').t('-1'))
       @connection.pubsub.subscribe( @connection.jid, @pubsub_server, @subnode, [], Replay_on_event, Replay_on_subscribe)
+    else
+      AppReport("Unknown status: #{status}")
+
     true
 
 

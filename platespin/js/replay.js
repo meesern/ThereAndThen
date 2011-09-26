@@ -4,7 +4,7 @@
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
   root.Replay = (function() {
     function Replay(server, subnode, observer) {
-      var boshService;
+      var boshService, port_ext;
       this.server = server;
       this.subnode = subnode;
       this.observer = observer;
@@ -12,7 +12,12 @@
       this.raw_input = __bind(this.raw_input, this);
       this.pubsub_server = 'pubsub.' + this.server;
       AppReport("Subscribing to " + this.pubsub_server + ", " + this.subnode);
-      boshService = "http://" + this.server + "/http-bind";
+      port_ext = "";
+      if (!/\./.exec(this.server)) {
+        port_ext = ':5280';
+      }
+      boshService = "http://" + (this.server + port_ext) + "/http-bind";
+      AppReport("via " + boshService);
       this.connection = new Strophe.Connection(boshService);
       this.connection.rawInput = this.raw_input;
       this.connection.rawOutput = this.raw_output;
@@ -78,6 +83,8 @@
         AppReport("Connected");
         this.connection.send($pres().c('priority').t('-1'));
         this.connection.pubsub.subscribe(this.connection.jid, this.pubsub_server, this.subnode, [], Replay_on_event, Replay_on_subscribe);
+      } else {
+        AppReport("Unknown status: " + status);
       }
       return true;
     };
