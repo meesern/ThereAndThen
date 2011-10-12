@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Object Container</title>
+  <link rel="stylesheet" href="css/dark-hive/jquery-ui-1.8.11.custom.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/platespin.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/menu.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/css-buttons.css" type="text/css" media="screen" />
+  <script src="AIRAliases.js"/>
+  <script src="AIRIntrospector.js"/>
+  <script>
+      exports = {};
+      /* only needed for setInterval timers
+        function visit() {
+	air.Introspector.Console.log("timer");
+	exports.mark();
+      };
+      */
+        
+  </script>
+  <script src="thirdparty_js/jquery-1.5.2.min.js"></script>
+  <script src="thirdparty_js/jquery-ui-1.8.11.custom.min.js"></script>
+  <script src="thirdparty_js/base64.js"></script>
+  <script src="thirdparty_js/hsv.js"></script>
+  <script src="thirdparty_js/pen_min.js"></script>
+  <script src="thirdparty_js/d3/d3.js"></script>
+  <script src="thirdparty_js/strophe.min.js"></script> 
+  <script src="thirdparty_js/strophe.pubsub.min.js"></script> 
+  <script src="js/index.js"></script>
+  <script src="js/replay.js"></script>
+  <script src="js/timeline.js"></script>
+  <script src="js/trailtrace.js"></script>
+  <script src="js/trail.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+      //air.Introspector.Console.log("foo");
+  </script>
+</head>
+<body>
+<div id="main" style="border-top:1px solid #404040">
+  <ul id="menu">
+      <li><a href="#" class="drop"><img src="/img/tools.png"/><span class='menu_txt'>Options</span></a><!-- Begin Home Item -->
+	  <div id="oc-config" class="dropdown_3columns"><!-- Begin 3 columns container -->
+	      <h2>Configure</h2>
+		<fieldset class='opt_fset'>  
+		<legend> Item Name </legend> 
+		  <p><label> Name</label> <input id='item' type=text name=item/></p> 
+		</fieldset> 
+		<fieldset class='opt_fset'>  
+		<legend> Cloud Location </legend> 
+		  <p><label> Server</label> <input id='server' type=text name=server/></p> 
+		  <p><label> Port </label> <input id='port' type=text name=port/></p> 
+		</fieldset> 
+		<fieldset class='opt_fset'>  
+		<legend> Replay </legend> 
+		  <p><label> Rate</label> <input id='rate' type=text name=rate value="1"/>0.001-100000</p> 
+		  <p><label> Gapskip</label> <input id='gskip' type=text name=gskip value="0"/>seconds</p> 
+		</fieldset> 
+		<fieldset class='opt_fset'>  
+		<legend> Data Source </legend> 
+		  <p><label><input id='dsfile' type=radio name=source> File</label></p> 
+		  <p><label><input id='dscloud' type=radio name=source> Cloud</label></p> 
+		</fieldset> 
+		<fieldset class='opt_fset'>  
+		<legend> Output </legend> 
+		  <p><label> <input id='obox' type=radio name=oput> Box </label></p> 
+		  <p><label> <input id='ocorner' type=radio name=oput> Corner</label></p> 
+		  <p><label> <input id='ofcorner' type=radio name=oput> First Corner</label></p> 
+		</fieldset> 
+	  </div>
+      </li>
+      <li><a href="#" class="drop"><img src="/img/video_camera.png"/><span class='menu_txt'>Actions</span></a>
+	  <div class="dropdown_1column">
+	      <div class="col_1">
+		  <p>Draw all the data</p>
+		  <button id = "b_go" class="button blue medium">Fetch</button>
+		  <button id = "b_ani" class="button blue medium">Animate</button>
+		  <hr/>
+		  <p>Replay the data</p>
+		  <button id = "b_run" class="button orange medium">Replay</button>
+		  <button id = "b_stp" class="button orange medium">Stop</button>
+		  <hr/>
+		  <p>Save the Image</p>
+		  <button id = "b_sav" class="button blue medium">Save</button>
+		  <hr/>
+		  <p>Clear the screen</p>
+		  <button id = "b_clr" class="button orange medium">Clear</button>
+
+	      </div>
+	  </div>
+      </li>
+    <img id="blob" src="/img/horizon_swoosh.png"/>
+  </ul>
+  <div id='inner'>
+      <div id='tracker'></div>
+      <div id='history'>
+        <h1>History</h1>
+	<!--<canvas id="hc"></canvas>-->
+      </div>
+      <div id='status'></div>
+  </div>
+</div>
+</body>
+</html>

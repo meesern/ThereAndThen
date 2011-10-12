@@ -259,15 +259,22 @@ Trail.itemsCompleteHandler = (event) =>
       loader = air.URLLoader(event.target)
       data = loader.data
     #find all aspects
-    doc =   $.parseXML(data)
-    name = $(doc).find("items > name:contains('#{AppCtl.getItemName()}')")[0]
-    AppReport("got #{name}")
-    return unless name?
-    aspects_xml = $(name).parent().find("aspects")
-    AppReport("found #{aspects_xml.length} elements")
-    @aspects = $.map( aspects_xml, (aspect, i) -> 
-      $(aspect).find('id').text()
+    doc =   JSON.parse(data)
+    res = doc.filter( (item) ->
+      iname = new RegExp(AppCtl.getItemName())
+      iname.test(item['name'])
     )
+    name = res[0]
+
+    AppReport("got #{name.name}")
+    return unless name?
+
+    @aspects = name['entities'].map( (entity) -> 
+      entity['aspects'].map( (aspect) ->
+        aspect['id']
+      )
+    ).flatten()
+
     @structureRequest()
 
 Trail.getHistory = ->
@@ -278,7 +285,7 @@ Trail.getHistory = ->
 
     AppReport("Fetching History & Data")
     Trail.loads = @aspects.length
-    Trail.data = "<collection>"
+    Trail.data = "["
     for aspect in @aspects
       #AppReport("Aspect id #{aspect}")
       Trail.getFromCloud("data/#{aspect}", Trail.dataCompleteHandler)
@@ -295,10 +302,12 @@ Trail.dataCompleteHandler = (event) =>
     Trail.data += data
     Trail.loads--
     if (Trail.loads <= 0)
-      Trail.data += "</collection>"
+      Trail.data += "]"
       #AppReport("Trail data: #{Trail.data}")
       AppReport("Fetch Complete - plotting")
       Trail.visualise(Trail.data)
+    else
+      Trail.data += ","
 
 Trail.historyCompleteHandler = (event) =>
     AppReport("History Complete")
@@ -382,15 +391,14 @@ Trail.huefromcode = (code)->
 
 Trail.history_parse = (data) ->
   AppReport(data)
-  history_doc = $.parseXML(data)
-  counts = $(history_doc).find('count')
+  history_doc = JSON.parse(data)
   points = []
-  counts.each( ->
-    year = $(this).attr('year')
-    day = $(this).attr('day')
-    minute = $(this).attr('minute')
-    second = $(this).attr('second')
-    points.push([$(this).text(),year,day,minute,second])
+  history_doc.each( (count) ->
+    year = count['year']
+    day = count['day']
+    minute = count['minute']
+    second = count['second']
+    points.push([count['count'],year,day,minute,second])
   )
   AppReport("found #{points.length} counts like #{points[0]}")
   points
@@ -401,16 +409,16 @@ Trail.parse = (data, pstart, pend, type) ->
   xs = []
   ys = []
   points = []
-  Trail.doc ||= $.parseXML(data)
+  Trail.doc ||= JSON.parse(data).flatten()
   #AppReport("got: #{Trail.doc}")
-  @ments ||= $(Trail.doc).find('marker')
+  @ments ||= Trail.doc
   AppReport("found #{@ments.length} elements")
   return if (@ments.length == 0)
   if (Trail.points.length == 0)
     lasttime = []
-    @ments.each( ->
-      marker = $(this)
-      time = marker.parent().attr('t')
+    @ments.each( (ment) ->
+      time = ment['t']
+      marker = $.parseXML(ment['ment']).find('marker')
       code = marker.attr('code')
       tstamp = marker.attr('timestamp') #time only from xml
       x1 = parseFloat(marker.attr('x1'))

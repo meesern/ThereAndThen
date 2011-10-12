@@ -231,7 +231,7 @@
     return Trail.getFromCloud("items", Trail.itemsCompleteHandler);
   };
   Trail.itemsCompleteHandler = __bind(function(event) {
-    var aspects_xml, data, doc, loader, name;
+    var data, doc, loader, name, res;
     if (Browser) {
       if (event.target.readyState !== 4) {
         return;
@@ -241,17 +241,22 @@
       loader = air.URLLoader(event.target);
       data = loader.data;
     }
-    doc = $.parseXML(data);
-    name = $(doc).find("items > name:contains('" + (AppCtl.getItemName()) + "')")[0];
-    AppReport("got " + name);
+    doc = JSON.parse(data);
+    res = doc.filter(function(item) {
+      var iname;
+      iname = new RegExp(AppCtl.getItemName());
+      return iname.test(item['name']);
+    });
+    name = res[0];
+    AppReport("got " + name.name);
     if (name == null) {
       return;
     }
-    aspects_xml = $(name).parent().find("aspects");
-    AppReport("found " + aspects_xml.length + " elements");
-    this.aspects = $.map(aspects_xml, function(aspect, i) {
-      return $(aspect).find('id').text();
-    });
+    this.aspects = name['entities'].map(function(entity) {
+      return entity['aspects'].map(function(aspect) {
+        return aspect['id'];
+      });
+    }).flatten();
     return this.structureRequest();
   }, this);
   Trail.getHistory = function() {
@@ -261,7 +266,7 @@
     Trail.getFromCloud(this.history_url, Trail.historyCompleteHandler);
     AppReport("Fetching History & Data");
     Trail.loads = this.aspects.length;
-    Trail.data = "<collection>";
+    Trail.data = "[";
     _ref = this.aspects;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -285,9 +290,11 @@
     Trail.data += data;
     Trail.loads--;
     if (Trail.loads <= 0) {
-      Trail.data += "</collection>";
+      Trail.data += "]";
       AppReport("Fetch Complete - plotting");
       return Trail.visualise(Trail.data);
+    } else {
+      return Trail.data += ",";
     }
   }, this);
   Trail.historyCompleteHandler = __bind(function(event) {
@@ -383,18 +390,17 @@
     return color_hue %= 255;
   };
   Trail.history_parse = function(data) {
-    var counts, history_doc, points;
+    var history_doc, points;
     AppReport(data);
-    history_doc = $.parseXML(data);
-    counts = $(history_doc).find('count');
+    history_doc = JSON.parse(data);
     points = [];
-    counts.each(function() {
+    history_doc.each(function(count) {
       var day, minute, second, year;
-      year = $(this).attr('year');
-      day = $(this).attr('day');
-      minute = $(this).attr('minute');
-      second = $(this).attr('second');
-      return points.push([$(this).text(), year, day, minute, second]);
+      year = count['year'];
+      day = count['day'];
+      minute = count['minute'];
+      second = count['second'];
+      return points.push([count['count'], year, day, minute, second]);
     });
     AppReport("found " + points.length + " counts like " + points[0]);
     return points;
@@ -405,18 +411,18 @@
     xs = [];
     ys = [];
     points = [];
-    Trail.doc || (Trail.doc = $.parseXML(data));
-    this.ments || (this.ments = $(Trail.doc).find('marker'));
+    Trail.doc || (Trail.doc = JSON.parse(data).flatten());
+    this.ments || (this.ments = Trail.doc);
     AppReport("found " + this.ments.length + " elements");
     if (this.ments.length === 0) {
       return;
     }
     if (Trail.points.length === 0) {
       lasttime = [];
-      this.ments.each(function() {
+      this.ments.each(function(ment) {
         var code, marker, time, tstamp, x1, x2, y1, y2;
-        marker = $(this);
-        time = marker.parent().attr('t');
+        time = ment['t'];
+        marker = $.parseXML(ment['ment']).find('marker');
         code = marker.attr('code');
         tstamp = marker.attr('timestamp');
         x1 = parseFloat(marker.attr('x1'));

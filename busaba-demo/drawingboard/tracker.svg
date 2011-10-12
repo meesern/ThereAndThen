@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg3039"
+   version="1.1"
+   inkscape:version="0.48.1 r9760"
+   width="918"
+   height="482"
+   sodipodi:docname="tracker.svg"
+   inkscape:export-filename="/home/meesern/Develpment/ThereAndThen/platespin/drawingboard/tracker.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
+   style="enable-background:new">
+  <metadata
+     id="metadata3045">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3043">
+    <filter
+       inkscape:collect="always"
+       id="filter3838"
+       x="-0.16202059"
+       width="1.3240412"
+       y="-0.28353602"
+       height="1.5670722"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="31.947723"
+         id="feGaussianBlur3840" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3997"
+       x="-0.051220544"
+       width="1.1024411"
+       y="-0.16613503"
+       height="1.3322701"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="21.548428"
+         id="feGaussianBlur3999" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4001"
+       color-interpolation-filters="sRGB">
+      <feBlend
+         inkscape:collect="always"
+         mode="lighten"
+         in2="BackgroundImage"
+         id="feBlend4003" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1124"
+     inkscape:window-height="670"
+     id="namedview3041"
+     showgrid="false"
+     borderlayer="true"
+     inkscape:zoom="0.5"
+     inkscape:cx="388.99155"
+     inkscape:cy="214.75314"
+     inkscape:window-x="305"
+     inkscape:window-y="204"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer4"
+     inkscape:showpageshadow="true"
+     showborder="false" />
+  <image
+     width="920"
+     height="482"
+     xlink:href="file:///home/meesern/Develpment/ThereAndThen/platespin/drawingboard/light%20wood.jpg"
+     id="image3047"
+     x="0"
+     y="1.1657342e-14" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="base"
+     sodipodi:insensitive="true"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="dim"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <rect
+       style="fill:#000000;fill-opacity:0.85490196;fill-rule:evenodd;stroke:none"
+       id="rect3051"
+       width="918"
+       height="482"
+       x="0"
+       y="5.1461873e-14"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="focus"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.80603452;stroke:none;filter:url(#filter3838)"
+       id="path3822"
+       sodipodi:cx="383.0986"
+       sodipodi:cy="252.42253"
+       sodipodi:rx="236.61972"
+       sodipodi:ry="135.21127"
+       d="m 619.71832,252.42253 a 236.61972,135.21127 0 1 1 -473.23944,0 236.61972,135.21127 0 1 1 473.23944,0 z"
+       transform="matrix(1.6791859,0,0,1.46875,-181.17654,-121.13995)" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="dust"
+     style="opacity:0.8984375;display:inline;filter:url(#filter4001)"
+     sodipodi:insensitive="true">
+    <image
+       y="-12.018832"
+       x="-18.716169"
+       id="image3972"
+       xlink:href="file:///home/meesern/Develpment/ThereAndThen/platespin/drawingboard/dust2.jpg"
+       height="532.27271"
+       width="972.90906" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.80603452;stroke:none;filter:url(#filter3997)"
+       id="path3991"
+       sodipodi:cx="525.80646"
+       sodipodi:cy="282.80646"
+       sodipodi:rx="504.83871"
+       sodipodi:ry="155.64516"
+       d="m 1030.6452,282.80646 a 504.83871,155.64516 0 1 1 -1009.677457,0 504.83871,155.64516 0 1 1 1009.677457,0 z"
+       transform="matrix(0.9587724,0,0,1.7882446,-93.576582,-258.98514)" />
+  </g>
+</svg>

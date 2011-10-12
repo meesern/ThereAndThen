@@ -1,0 +1,120 @@
+body {
+  /*background-color: #2a1a0a; */
+  background-color: hsl(234,15%,16%); 
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.12, hsl(234,15%,16%)),
+    color-stop(0.60, hsl(234,32%,20%)),
+    color-stop(0.78, hsl(234,15%,16%))
+  );
+  background-image: -moz-linear-gradient(
+    center bottom,
+    hsl(234,15%,16%) 12%,
+    hsl(234,32%,20%) 60%,
+    hsl(234,15%,16%) 78%
+  );
+}
+
+.menu_txt {
+  position: relative;
+  top: -8px;
+  left: 3px;
+}
+
+.upview {
+  list-style: none;
+  margin: 7px auto 0px auto;
+  padding: 0px 20px 0px 20px;
+  /* Rounded Corners */
+  border-radius: 10px;
+  /* Background color and gradients */
+  background: #014464;
+  background: -moz-linear-gradient(top, #0272a7, #013953);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0272a7), to(#013953));
+  /* Borders */
+  border: 1px solid #002232;
+  box-shadow: inset 0px 0px 1px #edf9ff; }
+
+.progressbar {
+  height: 1em;
+  margin-bottom: 14px; }
+
+#status {
+  color: white;
+  margin: 7px auto 0px auto;
+  padding: 0px 20px 0px 20px;
+  height: 7em;
+  /* Rounded Corners */
+  border-radius: 10px;
+  /* Background color and gradients */
+  background: #a1a494;
+  /* Borders */
+  border: 1px solid #002232;
+  box-shadow: inset 0px 0px 1px #edf9ff;
+  overflow-y: scroll; }
+
+#inner {
+  padding: 10px; }
+
+#tracker {
+  border: 3px solid black;
+  border-radius: 10px;
+  background: url(/img/tracker.png) #010000;
+  min-height: 480px; }
+
+#status p {
+  margin: 0.5em 0; }
+
+#history {
+  color: white;
+  font-size: 0.8em;
+  margin-top: 4px;
+  min-height: 80px;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: #010000; }
+
+#history h1 {
+  font-size: 1.2em;
+  font-family: Arial;
+  margin-left: 8px; }
+
+#history svg {
+  cursor: crosshair; }
+
+.chart {
+  margin-left: 20px; }
+
+.chart rect {
+  stroke: #0272a7;
+  fill: #014464; }
+
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white; }
+
+#selection {
+  fill: rgba(34, 102, 0, 0.1);
+  stroke: #cccccc; }
+
+#oc-config fieldset {
+  width: 43%;
+  float: left; }
+
+#item, #server, #port, #rate, #gskip {
+  width: 98%; }
+
+.opt_fset label {
+  width: 45%; }
+
+#blob {
+  position: relative;
+  float: right;
+}
