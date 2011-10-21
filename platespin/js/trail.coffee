@@ -418,13 +418,12 @@ Trail.parse = (data, pstart, pend, type) ->
     lasttime = []
     @ments.each( (ment) ->
       time = ment['t']
-      marker = $.parseXML(ment['ment']).find('marker')
-      code = marker.attr('code')
-      tstamp = marker.attr('timestamp') #time only from xml
-      x1 = parseFloat(marker.attr('x1'))
-      x2 = parseFloat(marker.attr('x2'))
-      y1 = parseFloat(marker.attr('y1'))
-      y2 = parseFloat(marker.attr('y2'))
+      code =          ment['ment']['code']
+      tstamp =        ment['ment']['timestamp'] 
+      x1 = parseFloat(ment['ment']['x1'])
+      x2 = parseFloat(ment['ment']['x2'])
+      y1 = parseFloat(ment['ment']['y1'])
+      y2 = parseFloat(ment['ment']['y2'])
       xs.push(x1)
       ys.push(y1)
       xs.push(x2)
