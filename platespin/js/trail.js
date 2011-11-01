@@ -142,7 +142,7 @@
   };
   Trail.replayWithStructure = function() {
     var aspect, replay_url;
-    aspect = this.aspects[2];
+    aspect = this.aspects[1];
     AppReport("Starting replay for " + aspect);
     replay_url = "replay-create/" + aspect + "?start=1&rate=" + (AppCtl.getRate()) + "&gapskip=" + (AppCtl.getSkip());
     return Trail.putToCloud(replay_url, Trail.replayResponseHandler);
@@ -261,7 +261,7 @@
   }, this);
   Trail.getHistory = function() {
     var aspect, _i, _len, _ref, _results;
-    this.history_url = "counts/" + this.aspects[2] + "?grain=200";
+    this.history_url = "counts/" + this.aspects[1] + "?grain=200";
     this.history_level = "all";
     Trail.getFromCloud(this.history_url, Trail.historyCompleteHandler);
     AppReport("Fetching History & Data");
@@ -539,7 +539,7 @@
     return AppReport("openHandler: " + event);
   };
   progressHandler = function(event) {
-    return AppReport("progressHandler loaded:" + event.loaded + " total: " + event.total);
+    return AppReport("progressHandler loaded:" + event.loaded);
   };
   securityErrorHandler = function(event) {
     return AppReport("securityErrorHandler: " + event);

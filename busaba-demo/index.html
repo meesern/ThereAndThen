@@ -1,22 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Object Container</title>
+  <title>Busaba Eathai Thai Restaurants London</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=7,chrome=1">
+  <meta name="viewport" content="width=864px" />
+  <link rel="shortcut icon" href="/static.busaba.com/assets/245/favicon.ico">
+  <link rel="stylesheet" href="css/all.css" type="text/css" media="all" />
   <link rel="stylesheet" href="css/dark-hive/jquery-ui-1.8.11.custom.css" type="text/css" media="screen" />
   <link rel="stylesheet" href="css/platespin.css" type="text/css" media="screen" />
   <link rel="stylesheet" href="css/menu.css" type="text/css" media="screen" />
   <link rel="stylesheet" href="css/css-buttons.css" type="text/css" media="screen" />
-  <script src="AIRAliases.js"/>
-  <script src="AIRIntrospector.js"/>
   <script>
       exports = {};
-      /* only needed for setInterval timers
-        function visit() {
-	air.Introspector.Console.log("timer");
-	exports.mark();
-      };
-      */
-        
   </script>
   <script src="thirdparty_js/jquery-1.5.2.min.js"></script>
   <script src="thirdparty_js/jquery-ui-1.8.11.custom.min.js"></script>
@@ -26,79 +22,206 @@
   <script src="thirdparty_js/d3/d3.js"></script>
   <script src="thirdparty_js/strophe.min.js"></script> 
   <script src="thirdparty_js/strophe.pubsub.min.js"></script> 
+  <script src="js/all-busaba.js"></script>  
   <script src="js/index.js"></script>
   <script src="js/replay.js"></script>
   <script src="js/timeline.js"></script>
   <script src="js/trailtrace.js"></script>
   <script src="js/trail.js"></script>
   <script src="js/app.js"></script>
-  <script>
-      //air.Introspector.Console.log("foo");
-  </script>
 </head>
 <body>
-<div id="main" style="border-top:1px solid #404040">
-  <ul id="menu">
-      <li><a href="#" class="drop"><img src="/img/tools.png"/><span class='menu_txt'>Options</span></a><!-- Begin Home Item -->
-	  <div id="oc-config" class="dropdown_3columns"><!-- Begin 3 columns container -->
-	      <h2>Configure</h2>
-		<fieldset class='opt_fset'>  
-		<legend> Item Name </legend> 
-		  <p><label> Name</label> <input id='item' type=text name=item/></p> 
-		</fieldset> 
-		<fieldset class='opt_fset'>  
-		<legend> Cloud Location </legend> 
-		  <p><label> Server</label> <input id='server' type=text name=server/></p> 
-		  <p><label> Port </label> <input id='port' type=text name=port/></p> 
-		</fieldset> 
-		<fieldset class='opt_fset'>  
-		<legend> Replay </legend> 
-		  <p><label> Rate</label> <input id='rate' type=text name=rate value="1"/>0.001-100000</p> 
-		  <p><label> Gapskip</label> <input id='gskip' type=text name=gskip value="0"/>seconds</p> 
-		</fieldset> 
-		<fieldset class='opt_fset'>  
-		<legend> Data Source </legend> 
-		  <p><label><input id='dsfile' type=radio name=source> File</label></p> 
-		  <p><label><input id='dscloud' type=radio name=source> Cloud</label></p> 
-		</fieldset> 
-		<fieldset class='opt_fset'>  
-		<legend> Output </legend> 
-		  <p><label> <input id='obox' type=radio name=oput> Box </label></p> 
-		  <p><label> <input id='ocorner' type=radio name=oput> Corner</label></p> 
-		  <p><label> <input id='ofcorner' type=radio name=oput> First Corner</label></p> 
-		</fieldset> 
-	  </div>
-      </li>
-      <li><a href="#" class="drop"><img src="/img/video_camera.png"/><span class='menu_txt'>Actions</span></a>
-	  <div class="dropdown_1column">
-	      <div class="col_1">
-		  <p>Draw all the data</p>
-		  <button id = "b_go" class="button blue medium">Fetch</button>
-		  <button id = "b_ani" class="button blue medium">Animate</button>
-		  <hr/>
-		  <p>Replay the data</p>
-		  <button id = "b_run" class="button orange medium">Replay</button>
-		  <button id = "b_stp" class="button orange medium">Stop</button>
-		  <hr/>
-		  <p>Save the Image</p>
-		  <button id = "b_sav" class="button blue medium">Save</button>
-		  <hr/>
-		  <p>Clear the screen</p>
-		  <button id = "b_clr" class="button orange medium">Clear</button>
+    <div id="content">
+      <h1><a href="index.html">Busaba Eathai <img src="../static.busaba.com/assets/161/logo.png" alt="" /></a></h1>
+      
+  
+    
+      
+    
+        <div id="main" style="border-top:1px solid #404040">
+          <ul id="menu">
+              <li><a href="#" class="drop"><img src="/img/tools.png"/><span class='menu_txt'>Options</span></a><!-- Begin Home Item -->
+                  <div id="oc-config" class="dropdown_3columns"><!-- Begin 3 columns container -->
+                      <h2>Configure</h2>
+                        <fieldset class='opt_fset'>  
+                        <legend> Item Name </legend> 
+                          <p><label> Name</label> <input id='item' type=text name=item/></p> 
+                        </fieldset> 
+                        <fieldset class='opt_fset'>  
+                        <legend> Cloud Location </legend> 
+                          <p><label> Server</label> <input id='server' type=text name=server/></p> 
+                          <p><label> Port </label> <input id='port' type=text name=port/></p> 
+                        </fieldset> 
+                        <fieldset class='opt_fset'>  
+                        <legend> Replay </legend> 
+                          <p><label> Rate</label> <input id='rate' type=text name=rate value="1"/>0.001-100000</p> 
+                          <p><label> Gapskip</label> <input id='gskip' type=text name=gskip value="0"/>seconds</p> 
+                        </fieldset> 
+                        <fieldset class='opt_fset'>  
+                        <legend> Data Source </legend> 
+                          <p><label><input id='dsfile' type=radio name=source> File</label></p> 
+                          <p><label><input id='dscloud' type=radio name=source> Cloud</label></p> 
+                        </fieldset> 
+                        <fieldset class='opt_fset'>  
+                        <legend> Output </legend> 
+                          <p><label> <input id='obox' type=radio name=oput> Box </label></p> 
+                          <p><label> <input id='ocorner' type=radio name=oput> Corner</label></p> 
+                          <p><label> <input id='ofcorner' type=radio name=oput> First Corner</label></p> 
+                        </fieldset> 
+                  </div>
+              </li>
+              <li><a href="#" class="drop"><img src="/img/video_camera.png"/><span class='menu_txt'>Actions</span></a>
+                  <div class="dropdown_1column">
+                      <div class="col_1">
+                          <p>Draw all the data</p>
+                          <button id = "b_go" class="button blue medium">Fetch</button>
+                          <button id = "b_ani" class="button blue medium">Animate</button>
+                          <hr/>
+                          <p>Replay the data</p>
+                          <button id = "b_run" class="button orange medium">Replay</button>
+                          <button id = "b_stp" class="button orange medium">Stop</button>
+                          <hr/>
+                          <p>Save the Image</p>
+                          <button id = "b_sav" class="button blue medium">Save</button>
+                          <hr/>
+                          <p>Clear the screen</p>
+                          <button id = "b_clr" class="button orange medium">Clear</button>
 
-	      </div>
-	  </div>
-      </li>
-    <img id="blob" src="/img/horizon_swoosh.png"/>
-  </ul>
-  <div id='inner'>
-      <div id='tracker'></div>
-      <div id='history'>
-        <h1>History</h1>
-	<!--<canvas id="hc"></canvas>-->
-      </div>
-      <div id='status'></div>
-  </div>
+                      </div>
+                  </div>
+              </li>
+            <img id="blob" src="/img/horizon_swoosh.png"/>
+          </ul>
+          </div>
+        <section id="teasers" class="">
+        <hgroup><h2><a href="http://busaba.com/teasers/index.html">Teasers</a></h2></hgroup>
+
+    <div class="container">
+        <div>
+          <img id='welcome-img' src="/static.busaba.com/assets/642/PDR_carousel_teaser (3)_carousel.jpg" alt="Personalised Dining at Busaba" title="Personalised Dining at Busaba">
+          <p>
+            This is where I'm going to put stuff.
+          </p>
+          <p>
+            Some stuff here.
+          </p>
+          <p>
+            And some stuff here.
+          </p>
+        </div>
+
+        <figure>
+          <div>
+          <a href="http://busaba.com/sanuk/news/private-dining-at-busaba/">
+          <a href="http://busaba.com/sanuk/news/private-dining-at-busaba/">
+                      <img class="cloudcarousel" src="/static.busaba.com/assets/642/PDR_carousel_teaser (3)_carousel.jpg" alt="Personalised Dining at Busaba" title="Personalised Dining at Busaba">
+          </a>
+          </a>
+          </div>
+          <figcaption>Personalised Dining</figcaption>
+        </figure>
 </div>
-</body>
+    
+      </section>
+      
+        <section id="news" class="collapsed">
+        <hgroup><h2><a href="../busaba.com/news/index.html">News <span lang="th">ข่าวสาร</span></a></h2></hgroup>
+
+  
+      </section>
+
+        <section id="menus" class="collapsed">
+        <hgroup><h2><a href="../busaba.com/menus/index.html">Menus <span lang="th">เมนู</span></a></h2></hgroup>
+
+      </section>
+      
+        <section id="locations" class="collapsed">
+        <hgroup><h2><a href="../busaba.com/locations/index.html">Locations <span lang="th">สาขา</span></a></h2></hgroup>
+
+      </section>
+
+        <section id="reviews" class="collapsed">
+        <hgroup><h2><a href="../busaba.com/reviews/index.html">Reviews <span lang="th">วิจารณ์</span></a></h2></hgroup>
+
+    
+      </section>
+
+        <!--
+        <section id="history" class="collapsed">
+        <hgroup><h2><a href="../busaba.com/history/index.html">Story <span lang="th">เรื่องราว</span></a></h2></hgroup>
+     
+      </section>
+      -->
+      
+        <section id="recipes" class="collapsed">
+        <hgroup><h2><a href="../busaba.com/recipes/index.html">Recipes <span lang="th">สูตรอาหาร</span></a></h2></hgroup>
+  
+      </section>
+
+  
+    <div id='status'></div>
+    </div>
+<footer>
+  <nav>
+  <ul>
+    <li><a href="../busaba.com/news/index.html">News</a></li>
+    <li><a href="../busaba.com/puzzle/index.html">Puzzle</a></li>
+    <li><a href="../busaba.com/reviews/index.html">Reviews</a></li>
+    <li><a href="../busaba.com/recipes/index.html">Recipes</a></li>
+    <li><a href="../busaba.com/history/index.html">Story</a></li>
+  </ul>
+  
+    <ul>
+      <li><a href="../busaba.com/menus/index.html">Menus</a></li>
+      
+      <li><a href="../busaba.com/menus/food/index.html">Food</a></li>
+      
+      <li><a href="../busaba.com/menus/drinks/index.html">Drinks</a></li>
+      
+      <li><a href="../busaba.com/menus/privatedining/index.html">Private Dining</a></li>
+      
+    </ul>
+  
+  
+    <ul>
+      <li><a href="../busaba.com/locations/index.html">Locations</a></li>
+      
+      <li><a href="../busaba.com/locations/wardourstreet/index.html">Wardour Street</a></li>
+      
+      <li><a href="../busaba.com/locations/storestreet/index.html">Store Street</a></li>
+      
+      <li><a href="../busaba.com/locations/birdstreet/index.html">Bird Street</a></li>
+      
+      <li><a href="../busaba.com/locations/pantonstreet/index.html">Panton Street</a></li>
+      
+      <li><a href="../busaba.com/locations/oldstreet/index.html">Old Street</a></li>
+      
+      <li><a href="../busaba.com/locations/westfield/index.html">Westfield</a></li>
+      
+      <li><a href="../busaba.com/locations/bicester/index.html">Bicester</a></li>
+      
+      <li><a href="../busaba.com/locations/floral-street/index.html">Floral Street</a></li>
+      
+    </ul>
+  
+    <ul id="auxnav">
+      <li><a href="../busaba.com/contact/index.html">Contact Us</a></li>
+      <li><a href="../busaba.com/recruitment/index.html">Recruitment</a></li>
+      <li><a href="../busaba.com/terms/index.html">Terms & Conditions</a></li>
+      <li><a href="../busaba.com/privacy/index.html">Privacy Policy</a></li>
+    </ul>
+  </nav>
+  <form id="newsletter" action="http://lists.gerritkaiser.de/t/r/s/dthyf/" method="post">
+    <input id="newsletter_email" placeholder="Subscribe to our Newsletter…" type="email" name="cm-dthyf-dthyf">
+    <input id="newsletter_submit" type="submit" value="Subscribe">
+  </form>
+  <nav id="external">
+    <ul>
+      <li id="twitter"><a href="http://twitter.com/busabaeathai" title="Follow @busabaeathai on Twitter">Twitter</a></li>
+      <li id="facebook"><a href="http://www.facebook.com/pages/Busaba-Eathai/270723197621" title="Visit our page on Faceook">Facebook</a></li>
+    </ul>
+  </nav>
+</footer>
+
+  </body>
 </html>

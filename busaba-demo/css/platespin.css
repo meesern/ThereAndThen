@@ -118,3 +118,9 @@ body {
   position: relative;
   float: right;
 }
+
+#welcome-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
