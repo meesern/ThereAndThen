@@ -1,0 +1,1423 @@
+/* This file was generated from src/fonts.css on Thu May 19 09:56:03 +0000 2011 */
+
+@font-face {
+  font-family: "AG Rounded Thai";
+  src: url("/static.busaba.com/assets/249/ag_rounded_bold_thai-webfont.eot");
+  src: local("☺"), url("/static.busaba.com/assets/265/ag_rounded_bold_thai-webfont.woff") format("woff"), url("/static.busaba.com/assets/261/ag_rounded_bold_thai-webfont.ttf") format("truetype"), url("/static.busaba.com/assets/257/ag_rounded_bold_thai-webfont.svgz") format("svg"), url("/static.busaba.com/assets/253/ag_rounded_bold_thai-webfont.svg") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "VAG Rounded";
+  src: url("/static.busaba.com/assets/269/vagrounded-bold-webfont.eot");
+  src: local("☺"), url("/static.busaba.com/assets/285/vagrounded-bold-webfont.woff") format("woff"), url("/static.busaba.com/assets/281/vagrounded-bold-webfont.ttf") format("truetype"), url("/static.busaba.com/assets/277/vagrounded-bold-webfont.svgz") format("svg"), url("/static.busaba.com/assets/273/vagrounded-bold-webfont.svg") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* This file was generated from src/assets.css on Thu May 19 09:56:03 +0000 2011 */
+
+.collapsed>hgroup>h2 a,
+.collapsed>hgroup>h3 a {
+  background-image: url("/static.busaba.com/assets/93/arrow_down.png");
+}
+
+.open>hgroup>h2 a,
+.open>hgroup>h3 a {
+  background-image: url("/static.busaba.com/assets/145/cross.png");
+}
+
+#news a[rel], #news a.rel,
+#recipes a[rel], #recipes a.rel {
+  background-image: url("/static.busaba.com/assets/117/arrow_left.png");
+}
+
+#news a[rel="next"], #news a.next,
+#recipes a[rel="next"], #recipes a.next,
+input[type="submit"], input.submit,
+.aux nav a {
+  background-image: url("/static.busaba.com/assets/141/arrow_right.png");
+}
+
+#news a[rel="prev"].disabled,#news a.prev.disabled,
+#recipes a[rel="prev"].disabled,#recipes a.prev.disabled,
+#news a[rel="prev"].disabled:active, #news a.prev.disabled:active,
+#recipes a[rel="prev"].disabled:active, #recipes a.prev.disabled:active,
+#news a[rel="prev"]:hover,#news a.prev:hover,
+#recipes a[rel="prev"]:hover,#recipes a.prev:hover,
+#recipes a[rel="prev"]:focus,#recipes a.prev:focus,
+#news a[rel="prev"]:focus, #news a.prev:focus {
+  background-image: url("/static.busaba.com/assets/97/arrow_left_gray.png");
+}
+
+#news a[rel="next"].disabled, #news a.next.disabled,
+#recipes a[rel="next"].disabled, #recipes a.next.disabled,
+#news a[rel="next"].disabled:active, #news a.next.disabled:active,
+#recipes a[rel="next"].disabled:active, #recipes a.next.disabled:active,
+#news a[rel="next"]:hover, #news a.next:hover,
+#recipes a[rel="next"]:hover, #recipes a.next:hover,
+#news a[rel="next"]:focus, #news a.next:focus,
+#recipes a[rel="next"]:focus, #recipes a.next:focus,
+input[type="submit"]:hover, input.submit:hover,
+input[type="submit"]:focus, input.submit:focus,
+.aux nav a:hover, .aux nav a:focus {
+  background-image: url("/static.busaba.com/assets/121/arrow_right_gray.png");
+}
+
+#news a[rel="prev"]:active, #news a.prev:active,
+#recipes a[rel="prev"]:active, #recipes a.prev:active {
+  background-image: url("/static.busaba.com/assets/113/arrow_left_white.png");
+}
+
+#news a[rel="next"]:active,#news a.next:active,
+#recipes a[rel="next"]:active,#recipes a.next:active,
+input[type="submit"]:active,input.submit:active,
+.aux nav a:active {
+  background-image: url("/static.busaba.com/assets/137/arrow_right_white.png");
+}
+
+.backnav a {
+  background-image: url("/static.busaba.com/assets/117/arrow_left.png");
+}
+
+.backnav a:hover {
+  background-image: url("/static.busaba.com/assets/97/arrow_left_gray.png");
+}
+
+.backnav a:active {
+  background-image: url("/static.busaba.com/assets/113/arrow_left_white.png");
+}
+
+#reviews a.prev_page {
+  background-image: url("/static.busaba.com/assets/109/arrow_left_small.png");
+}
+
+#reviews a.next_page {
+  background-image: url("/static.busaba.com/assets/133/arrow_right_small.png");
+}
+
+#reviews a.prev_page:hover,
+#reviews a.prev_page:focus {
+  background-image: url("/static.busaba.com/assets/101/arrow_left_small_gray.png");
+}
+
+#reviews a.next_page:hover,
+#reviews a.next_page:focus {
+  background-image: url("/static.busaba.com/assets/125/arrow_right_small_gray.png");
+}
+
+#reviews a.prev_page:active {
+  background-image: url("/static.busaba.com/assets/105/arrow_left_small_white.png");
+}
+
+#reviews a.next_page:active {
+  background-image: url("/static.busaba.com/assets/129/arrow_right_small_white.png");
+}
+
+#teasers a[rel],#teasers a.rel {
+  background-image: url("/static.busaba.com/assets/201/arrow_left_large.png");
+}
+
+#teasers a[rel="next"],#teasers a.next {
+  background-image: url("/static.busaba.com/assets/213/arrow_right_large.png");
+}
+
+#teasers a[rel="next"]:hover,#teasers a.next:hover {
+  background-image: url("/static.busaba.com/assets/217/arrow_right_large_gray.png");
+}
+
+#teasers a[rel="next"]:active, #teasers a.next:active {
+  background-image: url("/static.busaba.com/assets/221/arrow_right_large_white.png");
+}
+
+#teasers a[rel="prev"]:hover, #teasers a.prev:hover {
+  background-image: url("/static.busaba.com/assets/205/arrow_left_large_gray.png");
+}
+
+#teasers a[rel="prev"]:active, #teasers a.prev:active {
+  background-image: url("/static.busaba.com/assets/209/arrow_left_large_white.png");
+}
+
+#twitter a {background-image: url('/static.busaba.com/assets/622/bu_tw_normal.png');}
+#twitter a:hover {background-image: url('/static.busaba.com/assets/618/bu_tw_hover.png');}
+#facebook a {background-image: url('/static.busaba.com/assets/614/bu_fb_normal.png');}
+#facebook a {background-image: url('/static.busaba.com/assets/610/bu_fb_hover.png');}
+
+#wifi-login {
+  background-image: url("/static.busaba.com/assets/529/header.jpg");
+}
+
+body, section, #menus .tools {
+  color: #f0f0f0;
+  background: #252128;
+}
+::selection {
+  background: #ff7e14;
+  color: #252128;
+}
+h1,
+a,
+a:visited,
+#write_comment input[type="submit"],
+#write_comment input.submit,
+footer nav #auxnav a,
+footer nav #auxnav a:visited {
+  color: #c1a577;
+}
+form input, form textarea {
+  color: #f0f0f0;
+}
+form input:focus, form textarea:focus {
+  border-color: #f0f0f0;
+}
+#wifi-login .right {
+  background-color: #3d342e;
+}
+#menus .tools,
+#menus .tools a,
+#menus .tools a:visited,
+footer nav a,
+footer nav a:visited {
+  color: #808285;
+}
+.info a,
+.location a,
+.info a:visited,
+.location a:visited {
+  color: inherit;
+}
+a:hover,
+a:focus,
+a:visited:hover,
+a:visited:focus,
+#write_comment input[type="submit"]:hover,
+#write_comment input[type="submit"]:focus,
+#write_comment input.submit:hover,
+#write_comment input.submit:focus,
+#menus .tools li:hover,
+#menus .tools li:focus {
+  color: #4b4b4b;
+}
+a:active,
+a:visited:active,
+.jqp-controls a.jqp-toggle,
+#write_comment input[type="submit"]:active,
+#write_comment input.submit:active,
+#menus .tools .active {
+  color: #f0f0f0;
+}
+#content > section > hgroup > h2 a,
+.open > hgroup > h2,
+.open > hgroup > h3,
+.aux h2,
+.aux h3 {
+  color: #f0f0f0;
+}
+h4,
+section section article h2,
+.teasers a,
+.teasers a p,
+#reviews article p,
+#history p,
+#news .detail p,
+#news .detail ul,
+#news .detail ol,
+#recipes .detail .ingredients,
+#recipes .detail .instructions,
+.location .note,
+#privatedining .inactive,
+#write_comment label,
+.aux p {
+  color: #808285;
+}
+h1 a,
+h1 a:hover,
+h1 a:active,
+section > hgroup > h2 a,
+section > hgroup > h3 a,
+section > hgroup > h2 a:hover,
+section > hgroup > h3 a:hover {
+  color: inherit;
+}
+#newsletter h2 {
+  color: #c1a577;
+}
+h2 span {
+  color: #4b4b4b;
+}
+h3, section section h2, #teasers figure figcaption {
+  color: #c1a577;
+}
+.info h4 {
+  color: inherit;
+}
+#puzzle figure figcaption {
+  color: #f0f0f0;
+}
+#gallery .detail hgroup,
+#gallery .detail p,
+#recipes .detail hgroup,
+#recipes .detail h5,
+#recipes .detail .summary {
+  color: #f0f0f0;
+}
+#menus .inactive, #menus .inactive p {
+  border-color: #4b4b4b;
+  color: #4b4b4b;
+}
+#menus section hgroup {
+  background-color: #252128;
+}
+#menus .tools li.takeaway, #menus .tools li.takeaway:hover {
+  color: inherit;
+  cursor: inherit;
+}
+#menus p {
+  color: #c1a577;
+}
+#menus .price {
+  color: #f0f0f0;
+}
+#privatedining,
+#privatedining section,
+#privatedining .tools,
+#menus #privatedining hgroup {
+  background-color: #4b4b4b;
+}
+#privatedining .inactive {
+  color: #808285;
+  border-color: #808285;
+}
+#reviews article .author, #reviews .wrapper a {
+  color: #c1a577;
+}
+#reviews span.current {
+  color: #f0f0f0;
+}
+#reviews h3 {
+  color: #f0f0f0;
+}
+#puzzle figcaption, .teasers a figcaption {
+  color: white;
+}
+body, input {
+  font-weight: bold;
+  font-family: "VAG Rounded", Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+h2 span {
+  font-family: "AG Rounded Thai", Arial, Helvetica, sans-serif;
+}
+body,
+input,
+#terms h3,
+#terms p,
+#email-disclaimer h3,
+#email-disclaimer p,
+#privacy h3,
+#privacy p,
+#wifi-login p {
+  font-size: 15px;
+  line-height: 17px;
+}
+h1,
+h2,
+h3,
+h4,
+.backnav,
+#reviews #intro p,
+#reviews h3,
+#puzzle figure figcaption,
+#teasers figure figcaption,
+.aux p,
+.aux nav,
+#write_comment input[type="submit"],
+#write_comment input.submit,
+#wifi-login input[type="submit"],
+#wifi-login input.submit,
+#goog-fixurl,
+#goog-fixurl input[type="submit"],
+#goog-fixurl input.submit {
+  font-size: 32px;
+  line-height: 34px;
+}
+footer ul, #newsletter input {
+  font-size: 11px;
+  line-height: 1.1;
+}
+h5,
+.info h3,
+.info h4,
+label,
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+#gallery .detail ul li {
+  text-align: center;
+}
+section,
+article,
+figure,
+nav,
+footer,
+hgroup,
+figcaption {
+  display: block;
+}
+figure {
+  margin: 0;
+}
+body {
+  margin: 0;
+}
+p {
+  margin: 17px 0;
+}
+a {
+  text-decoration: underline;
+}
+h1 a,
+section > hgroup > h2 a,
+section > hgroup > h3 a,
+.teasers a,
+.location a,
+.backnav a,
+nav a,
+.pagination a,
+.tools a,
+.jqp-controls a {
+  text-decoration: none;
+}
+a img {
+  border: none;
+}
+ul, ul li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  padding-top: 17px;
+  border-left: 1px solid #c1a577;
+  border-right: 1px solid #c1a577;
+  background: transparent;
+}
+h1 img {
+  position: fixed;
+}
+h3, section section h2 {
+  clear: both;
+}
+.aux p {
+  margin-top: 0;
+}
+.teasers a p, #reviews article p {
+  margin: 0;
+  padding: 0;
+}
+section > hgroup > h2 a, section > hgroup > h3 a, .backnav a {
+  display: block;
+  background-repeat: no-repeat;
+}
+.backnav a {
+  background-repeat: no-repeat;
+}
+.loading img, .teasers .loading img {
+  width: 16px;
+  height: 16px;
+}
+.teasers a .loading, .location a, .location a .loading {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.location .loading, .teasers .loading {
+  background: transparent;
+  background: rgba(37, 33, 40, 0.75);
+}
+.location .loading img, .teasers .loading img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -8px;
+  margin-left: -8px;
+}
+.collapsed > .container,
+.collapsed > section,
+.collapsed > div,
+.collapsed > ul,
+.collapsed > p {
+  display: none;
+}
+.aux, section .container {
+  overflow: hidden;
+  position: relative;
+}
+.wrapper {
+  position: relative;
+  left: 0;
+  width: 20000px;
+  overflow: hidden;
+}
+.wrapper .container {
+  float: left;
+  border-right: 1px solid #c1a577;
+}
+#content > section {
+  clear: both;
+  border: 1px solid #c1a577;
+  border-top: none;
+  border-bottom: none;
+}
+section h2,
+.wrapper,
+#content > section#teasers,
+#history .container,
+#puzzle .container,
+#menus .open,
+#reviews .container,
+#content > section:last-child,
+#content > section.last-child {
+  border-bottom: 1px solid #c1a577;
+}
+#reviews:last-child .container, #reviews.last-child .container, article.detail h2 {
+  border-bottom: none;
+}
+#content > section:last-child, #content > section.last-child {
+  padding-bottom: 100px;
+}
+#content > #teasers {
+  padding-bottom: 0;
+}
+#news .scroll, #recipes .scroll {
+  float: left;
+}
+.teasers {
+  border-bottom: none;
+}
+.teasers, #gallery .detail ul {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+.teasers li, #gallery .detail ul li {
+  display: block;
+  float: left;
+  border-left: 1px solid #c1a577;
+}
+#gallery .detail img {
+  display: block;
+  margin: 0 auto;
+}
+.teasers img, .teasers a, #news .detail img {
+  display: block;
+  position: relative;
+}
+#puzzle figcaption, .teasers a figcaption {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  margin-top: -17px;
+  left: 17px;
+  right: 17px;
+  text-align: center;
+  background: #4b4b4b;
+  background: rgba(75, 75, 75, 0.75);
+  border: 1px solid #f0f0f0;
+}
+#news a[rel],
+#news a.rel,
+#recipes a[rel],
+#recipes a.rel {
+  display: block;
+  text-indent: -1000em;
+  background-repeat: no-repeat;
+  background-position: center center;
+  float: left;
+  cursor: pointer;
+}
+#news a[rel="next"],
+#news a.next,
+#recipes a[rel="next"],
+#recipes a.next {
+  margin-left: -1px;
+  border-left: 1px solid #c1a577;
+}
+#news a[rel].disabled,
+#news a.rel.disabled,
+#recipes a[rel].disabled,
+#recipes a.rel.disabled {
+  cursor: default;
+}
+#puzzle figure {
+  position: relative;
+}
+#history .container img {
+  width: 322px;
+  height: 478px;
+}
+#news .detail img {
+  float: right;
+  clear: right;
+  margin-bottom: 17px;
+}
+#gallery .detail p {
+  border-bottom: 1px solid #c1a577;
+}
+#recipes .detail h5 {
+  margin-top: 17px;
+}
+#recipes .detail .photo {
+  float: right;
+  display: block;
+  margin-top: -68px;
+  margin-right: 84px;
+  margin-bottom: 17px;
+}
+#recipes .detail .ingredients {
+  clear: both;
+  float: left;
+  margin-top: -17px;
+}
+#recipes .detail ul {
+  position: static;
+  width: auto;
+  list-style: bullet;
+}
+#recipes .detail ul li {
+  display: list-item;
+  border: none;
+  padding: 0;
+}
+#locations, #recipes {
+  overflow: hidden;
+}
+#locations_map {
+  height: 361px;
+  position: relative;
+  z-index: 10;
+}
+#locations_map, #locations .detail .images {
+  border-bottom: 1px solid #c1a577;
+}
+#locations .detail img + img {
+  float: right;
+}
+.tools p {
+  margin: 0;
+}
+.tools a {
+  display: block;
+}
+#locations .location {
+  height: 85px;
+  padding-bottom: 10px;
+}
+#locations .location,
+#locations .detail h3,
+.info h3,
+.info .takeaway-notice,
+.tools p,
+#menus ul li,
+#menus h4 {
+  border-top: 1px dotted #c1a577;
+}
+.location .org,
+.location .geo,
+.location .country-name,
+#locations .detail .org,
+#locations .detail .geo,
+#locations .detail .country-name {
+  display: none;
+}
+.location p {
+  margin: 0;
+}
+.info h3, .info h4 {
+  border-bottom: none;
+  padding: 0;
+}
+.info h3 + p, .info h4 + p {
+  margin-top: 0;
+}
+#locations p:last-child, #locations p.last-child {
+  margin-bottom: 0;
+}
+.backnav {
+  margin: 0;
+}
+#menus section hgroup {
+  margin-top: -1px;
+  border-top: 1px solid #c1a577;
+  position: relative;
+  z-index: 6;
+}
+#menus h4 {
+  word-spacing: -2px;
+  clear: both;
+}
+#menus section .container .tools {
+  overflow: hidden;
+  border-top: 1px solid #c1a577;
+  margin-top: -1px;
+  border-bottom: 1px solid #c1a577;
+  margin-left: 0;
+  padding: 0;
+  position: relative;
+  top: 0;
+  z-index: 5;
+}
+#menus .tools li {
+  border: none;
+  padding: 4px 0;
+  margin-top: 0;
+}
+#menus .tools li:hover {
+  cursor: pointer;
+}
+#menus .tools li.takeaway, #menus .tools li.takeaway:hover {
+  cursor: inherit;
+}
+#menus p {
+  margin: 0;
+}
+#menus .price {
+  float: left;
+  margin-right: .3em;
+}
+#menus .alternative {
+  display: table-row;
+}
+#menus .alternative .price {
+  float: none;
+  display: table-cell;
+}
+#menus .alternative .price + p {
+  display: table-cell;
+  padding-left: .3em;
+}
+#reviews #intro, #write_comment, #reviews p.thanks {
+  width: 239px;
+  float: left;
+}
+#write_comment, #reviews p {
+  margin: 0;
+  padding-top: 9px;
+}
+#reviews h3 {
+  padding: 0;
+  border: none;
+}
+#reviews #intro p {
+  margin-top: 0;
+}
+#reviews #intro {
+  padding: 0 0 9px 9px;
+}
+#reviews #intro, #reviews .container .container {
+  margin-right: 13px;
+}
+#reviews .wrapper {
+  border: none;
+}
+#reviews .container .container {
+  padding: 9px 0;
+  border: none;
+}
+#reviews .container .container, #reviews .container .container .wrapper div {
+  width: 323px;
+  float: left;
+}
+#reviews article {
+  padding-bottom: 8px;
+  border-bottom: 1px dotted #c1a577;
+  margin-bottom: 8px;
+}
+#reviews span.disabled {
+  display: none;
+}
+#reviews a.prev_page, #reviews a.next_page {
+  text-indent: -1000em;
+  display: inline-block;
+  width: 8px;
+  background-repeat: no-repeat;
+  background-position: left 1px;
+}
+#write_comment p,
+label,
+input,
+textarea {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+input, textarea {
+  background: transparent;
+  border: 1px solid #c1a577;
+  height: 32px;
+}
+textarea {
+  padding-top: 5px;
+}
+input:focus, textarea:focus {
+  outline: none;
+}
+#write_comment {
+  padding-bottom: 9px;
+}
+#write_comment label {
+  padding-top: 17px;
+}
+#write_comment input, #write_comment textarea {
+  padding-left: 2%;
+  width: 98%;
+}
+#write_comment textarea {
+  height: 20em;
+}
+input[type="submit"],
+input.submit,
+#write_comment input[type="submit"],
+#write_comment input.submit,
+.aux nav a {
+  cursor: pointer;
+  width: auto;
+  height: auto;
+  margin: 0;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: right 12px;
+  border: none;
+}
+#teasers h2 {
+  cursor: default;
+  border-bottom: none;
+}
+#wifi-login {
+  background-repeat: no-repeat;
+}
+#wifi-login section {
+  margin-top: 262px;
+  height: 170px;
+  padding-right: 6px;
+  border-top: 1px solid #c1a577;
+  border-bottom: 1px solid #c1a577;
+}
+#wifi-login section.right {
+  border-left: 1px solid #c1a577;
+  padding-right: 5px;
+}
+#teasers .container {
+  padding: 9px;
+}
+#teasers a {
+  font-size: 400%;
+  text-indent: -1000em;
+  height: 250px;
+  background-repeat: no-repeat;
+  background-position: 50% 92px;
+  width: 50px;
+  overflow: hidden;
+  float: left;
+  display: block;
+}
+#teasers figure {
+  float: left;
+  width: 726px;
+}
+#teasers figure div {
+  height: 250px;
+  width: 100%;
+}
+#teasers figure figcaption {
+  text-align: center;
+}
+#external {
+  float: right;
+}
+#external ul {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+#external li {
+  float: left;
+}
+#external a {
+  display: block;
+  width: 27px;
+  height: 27px;
+  margin-right: 10px;
+  overflow: hidden;
+  text-indent: -1000em;
+}
+#newsletter {
+  float: right;
+}
+#newsletter input {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+}
+#newsletter input, #newsletter input[type="submit"], #newsletter input.submit {
+  padding: 0 5px;
+  height: 25px;
+  margin: 0;
+}
+#newsletter input[type="submit"], #newsletter input.submit {
+  cursor: pointer;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  background-position: top left;
+  margin-left: 9px;
+  text-indent: -1000em;
+  overflow: hidden;
+  width: 14px;
+}
+body footer {
+  margin-left: 18px;
+}
+body footer ul {
+  float: left;
+  width: 71px;
+  margin-right: 13px;
+  padding-bottom: 17px;
+}
+#content h1 {
+  padding-left: 9px;
+}
+h1 img {
+  left: 895px;
+}
+section > hgroup > h2 a, section > hgroup > h3 a {
+  background-position: 812px 11px;
+}
+.backnav a {
+  background-position: 9px 1px;
+  padding-left: 32px;
+}
+section > hgroup > h2 a,
+section > hgroup > h3 a,
+#teasers h2,
+.aux h2 {
+  padding: 9px 0 5px 9px;
+}
+h2 .loading, h3 .loading {
+  margin-left: 9px;
+}
+.location a {
+  top: 8px;
+}
+.wrapper .container {
+  width: 844px;
+}
+#recipes .wrapper .detail, #news .wrapper .detail {
+  width: 826px;
+  padding: 9px;
+}
+#recipes .wrapper .detail .backnav, #news .wrapper .detail .backnav {
+  margin-left: -9px;
+}
+#content, footer {
+  margin: 0 0 9px 9px;
+  width: 846px;
+  overflow: hidden;
+  position: relative;
+}
+#news .scroll, #recipes .scroll {
+  width: 771px;
+}
+#gallery .detail ul li {
+  padding: 9px;
+  padding-left: 8px;
+  width: 752px;
+}
+#gallery .detail img {
+  width: 752px;
+  height: 564px;
+}
+.teasers a {
+  padding: 9px;
+  padding-left: 8px;
+  height: 100%;
+}
+.teasers img, .teasers a, #news .detail img {
+  width: 239px;
+}
+.teasers img, #news .detail img {
+  height: 179.25px;
+}
+#puzzle figcaption, .teasers a figcaption {
+  padding: 9px;
+}
+#news a[rel],
+#news a.rel,
+#recipes a[rel],
+#recipes a.rel {
+  width: 36px;
+  height: 197.25px;
+}
+#gallery .detail a[rel], #gallery .detail a.rel {
+  height: 582px;
+}
+#puzzle figure, #puzzle figure img {
+  display: block;
+  width: 659px;
+}
+#history .container {
+  padding-left: 9px;
+}
+#history .container img {
+  margin-bottom: 9px;
+}
+#history p, #history .container img {
+  margin-top: 9px;
+}
+#history section {
+  float: left;
+  padding-right: 13px;
+  width: 239px;
+}
+.aux section {
+  float: left;
+  padding: 9px 4px 0 9px;
+  width: 407px;
+}
+#news .detail p, #news .detail ol, #news .detail ul {
+  padding-right: 252px;
+}
+#news .detail img {
+  margin-left: 13px;
+}
+#recipes .wrapper, #gallery .wrapper {
+  height: 197.25px;
+}
+#gallery .container .wrapper {
+  border: none;
+}
+#gallery .detail .wrapper {
+  height: auto;
+}
+#gallery .detail .backnav {
+  padding: 9px 0 0 0;
+  border: none;
+}
+#gallery .detail hgroup {
+  padding-left: 9px;
+}
+#gallery .detail p {
+  padding: 0 9px 9px 9px;
+  margin: 0;
+}
+#recipes .detail hgroup, #recipes .detail .summary {
+  margin: 0;
+  width: 239px;
+}
+#recipes .detail .photo {
+  width: 491px;
+  height: 368.25px;
+}
+#recipes .detail .ingredients {
+  width: 239px;
+  margin-right: 13px;
+}
+#recipes .detail .instructions {
+  clear: right;
+  width: 491px;
+  margin-left: 252px;
+  -moz-column-width: 239px;
+  -webkit-column-width: 239px;
+  -moz-column-gap: 13px;
+  -webkit-column-gap: 13px;
+}
+#locations_map, #locations .detail .images {
+  margin-bottom: -9px;
+}
+#locations .detail {
+  padding-top: 9px;
+}
+#locations .detail .images {
+  padding-left: 9px;
+  padding-right: 9px;
+  padding-bottom: 9px;
+}
+#locations .detail img {
+  height: 305.25px;
+}
+.info {
+  padding-bottom: 9px;
+}
+.info,
+#locations .detail .tools,
+#locations .location,
+#menus ul li,
+#menus h4 {
+  padding-top: 8px;
+  width: 155px;
+  float: left;
+  display: block;
+  margin-right: 4px;
+  margin-left: 9px;
+}
+#locations .detail .tools, #locations .info {
+  margin-top: 9px;
+}
+#locations .location,
+#locations .detail h3,
+.info h3,
+.info .takeaway-notice,
+.tools p,
+#menus ul li,
+#menus h4 {
+  margin-top: 8px;
+  position: relative;
+  z-index: 4;
+}
+.info .takeaway-notice {
+  margin-top: -9px;
+  padding-top: 8px;
+}
+#locations .detail .tools {
+  padding-left: 84px;
+  width: 407px;
+}
+#locations .detail .tools p + p {
+  margin-top: 8px;
+}
+#menus ul {
+  margin-left: 168px;
+}
+.info h3, #locations .info h3, .tools p {
+  padding-top: 8px;
+  margin-top: -9px;
+}
+#menus section .container {
+  padding-bottom: 9px;
+}
+#menus section .container .tools {
+  margin-bottom: -9px;
+}
+input[type="submit"],
+input.submit,
+#write_comment input[type="submit"],
+#write_comment input.submit,
+.aux nav a {
+  padding: 9px 23px 0 0;
+}
+#newsletter h2 {
+  margin-right: 9px;
+}
+#wifi-login {
+  background-position: left 49px;
+}
+#puzzle figcaption, .teasers a figcaption {
+  -moz-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+#content > section {
+  -moz-border-radius-bottomleft: 5px;
+  -khtml-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+form input[type="text"],
+form input.text,
+form input[type="email"],
+form input.email,
+form input[type="search"],
+form input.search,
+form input[type="password"],
+form input.password,
+form textarea {
+  -moz-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+#content > section:last-child, #content > section.last-child {
+  -moz-border-radius-bottomleft: 30px;
+  -khtml-border-bottom-left-radius: 30px;
+  -webkit-border-bottom-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  -moz-border-radius-bottomright: 30px;
+  -khtml-border-bottom-right-radius: 30px;
+  -webkit-border-bottom-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+#puzzle .container {
+padding-left: 177px;
+}
+
+.jqPuzzle {
+padding: 9px 9px 9px 0;
+}
+
+.jqp-controls,.jqp-controls input {
+width: 155px;}
+
+.jqp-controls{
+margin-left: -168px;
+}
+
+.jqp-wrapper {
+float: right;z-index:2;
+}
+
+.jqp-controls a, .jqp-controls input {
+font-size:32px;line-height:34px;
+display:block;
+}
+
+.jqp-controls input {
+color: #808285;
+padding:0;margin:0;
+border:0;
+margin-top:9px;
+border-top:1px dotted #c1a577;
+padding-top:8px;
+background: transparent;
+}
+.jqp-controls span {
+color: #808285;
+display:block;
+}
+
+@media only screen and (max-device-width: 480px) {
+  h1 img {
+    display: none;
+  }
+  
+  .tools .print {
+    /*no printing on iphone anyway*/
+    display: none!important;
+  }
+
+  /* ================ */
+  /* = Larger Fonts = */
+  /* ================ */
+  body, input,
+  #terms h3, #terms p,
+  #privacy h3, #privacy p,
+  #newsletter h2 {
+    font-size: 30px;
+    line-height: 1.13333333;
+  }
+
+  h1, h2, h3, h4,
+  .backnav,
+  #reviews #intro p,
+  #reviews h3,
+  #puzzle figure figcaption,
+  #teasers figure figcaption,
+  .aux p, .aux nav,
+  #write_comment input[type="submit"],#write_comment input.submit,
+  #goog-fixurl,
+  #goog-fixurl input[type="submit"],#goog-fixurl input.submit {
+    font-size: 50px;
+    line-height: 52px;
+  }
+  
+  section > hgroup > h2 a,
+  section > hgroup > h3 a {
+    padding-bottom: 0px!important; /*slightly less padding, looks odd with huge font otherwise*/
+    background-position: 802px 25px;
+  }
+
+  footer ul {
+    font-size: 30px;
+    line-height: 1.1;
+  }
+  
+  /* ====================== */
+  /* = Wider/Less Columns = */
+  /* ====================== */
+  #history section {
+    float: none;
+    padding-right: 0;
+    width: auto;
+  }
+  
+  .teasers img,
+  .teasers a,
+  #news .detail img {
+    /* two teasers instead of three */
+    width: 367px; 
+  }
+  
+  .teasers img,
+  #news .detail img {
+    height: 275px;/*    367px/(4/3) */
+  }
+  
+  #recipes .detail .instructions {
+    clear: right;
+    width: auto;
+    -moz-column-width: auto;
+    -webkit-column-width: auto;
+    -moz-column-gap: 0;
+    -webkit-column-gap: 0;
+  }
+  
+  #menus ul li.spicy {
+    width: 155px;
+  }
+  
+  #menus ul li.takeaway {
+    width: 287px;
+  }
+  
+  #menus ul li,
+  #locations .detail .info,
+  #locations .location {
+    width: 210px;
+  }
+  
+  #locations .detail .tools {
+    width: 376px;
+    padding-left: 0;
+  }
+  
+  #locations .location {
+    height: 7em;
+  }
+  
+  .tel-label {
+    /*save space, it's pretty obvious it's a phone number*/
+    display: none;
+  }
+  .postal-code, .tel {
+    white-space: nowrap;/*line breaks within postal codes are ugly*/
+  }
+  
+  footer ul {
+    width: 155px; /* 2 x old width (71) + gutter (13px) */
+  }
+  
+  #newsletter {
+    width: 177px;
+  }
+  
+  #newsletter h2 {
+    float: none;
+  }
+  
+  /*HACK: experimental values, otherwise there's a line-break after field*/
+  #newsletter #newsletter_email {
+    width: 100px;
+    padding: 0 2px;
+  }
+  
+  #newsletter #newsletter_submit {
+    margin-left: 5px;
+  }
+}
+
+@page {
+  margin: 0;
+}
+
+@media print {  
+  * {
+    background: transparent!important;
+  }
+  
+  #recipes .detail .summary, #gallery p, .info {
+    color: #808285;
+  }
+  
+  h2, section section h2, .open>hgroup>h2,h3,
+  #content > section > hgroup > h2 a, a, a:hover, a:focus,a:active,
+  a:visited,a:visited:hover,a:visited:focus,a:visited:active,
+  #menus p {
+    color: #c1a577;
+  }
+  
+  /*
+  Most of these are displayed white on the dark background
+  so we switch them to dark brown
+  */
+  body, section, section section article h2, h4, #recipes .detail h5,#menus h5, #menus p.price, #reviews span.current {
+    color: #462305;
+  }
+  
+  body, #content {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1,
+  section > hgroup > h2 a,
+  #history .container,
+  .teasers a,
+  .detail,
+  #menus h4, #menus .tools li,
+  #locations .detail .images, .info,
+  #intro {
+    padding-left: 0!important;
+    margin-left: 0!important;
+  }
+  
+  .teasers a {
+    padding-right: 18px;
+  }
+  
+  h1, h2, h3,
+  section,
+  .container, .wrapper,
+  .gallery p,
+  .locationdetail .images, #locations_map,
+  .teasers li,
+  #menus .tools,
+  #menus section hgroup,
+  #menus .open,
+  #comments article {
+    border-width: 0;
+    border: none!important;
+  }
+  
+  h2, h3 {
+    background-image: none!important;
+  }
+  
+  h1 img,
+  section.collapsed,
+  #sanuk a[rel],
+  .backnav,
+  .tools .print,
+  #write_comment,
+  #teasers,
+  footer,
+  body.menus_only #content>section,
+  body.locations_only #content>section {
+    display: none!important;
+  }
+  
+  body.locations_only #content>#locations,
+  body.menus_only #content>#menus {
+    display: block!important;
+  }
+}
+@media handheld{h1 img{display:none;}#content,footer{padding:0!important;width:100%!important;}}
