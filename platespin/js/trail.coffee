@@ -278,8 +278,8 @@ Trail.itemsCompleteHandler = (event) =>
     @structureRequest()
 
 Trail.getHistory = ->
-    #Skip the first as it might be garbage!
-    @history_url = "counts/#{@aspects[1]}?grain=200" 
+    #Change to skip the first if it is garbage!
+    @history_url = "counts/#{@aspects[0]}?grain=200" 
     @history_level = "all"
     Trail.getFromCloud(@history_url, Trail.historyCompleteHandler)
 
@@ -350,6 +350,7 @@ Trail.getFromCloud = (api, handler) ->
 
 Trail.requestOfCloud = (api, handler, verb) ->
     url = "http://#{AppCtl.getOcServer()}:#{AppCtl.getPort()}/v1/#{api}"
+    AppReport("Cloud #{verb}: #{url}")
     if (Browser)
       req = new XMLHttpRequest()
       req.open(verb,url,true)

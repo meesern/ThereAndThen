@@ -261,7 +261,7 @@
   }, this);
   Trail.getHistory = function() {
     var aspect, _i, _len, _ref, _results;
-    this.history_url = "counts/" + this.aspects[1] + "?grain=200";
+    this.history_url = "counts/" + this.aspects[0] + "?grain=200";
     this.history_level = "all";
     Trail.getFromCloud(this.history_url, Trail.historyCompleteHandler);
     AppReport("Fetching History & Data");
@@ -348,6 +348,7 @@
   Trail.requestOfCloud = function(api, handler, verb) {
     var loader, req, url;
     url = "http://" + (AppCtl.getOcServer()) + ":" + (AppCtl.getPort()) + "/v1/" + api;
+    AppReport("Cloud " + verb + ": " + url);
     if (Browser) {
       req = new XMLHttpRequest();
       req.open(verb, url, true);
