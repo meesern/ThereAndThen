@@ -49,9 +49,7 @@
     TrailTrace.prototype.draw = function() {
       this.flow();
       this.stretch();
-      if (this.radius !== this.maxRadius) {
-        return this.circle(this.x, this.y, this.radius);
-      }
+      return this.circle(this.x, this.y, this.radius, this.radius === this.maxRadius);
     };
     TrailTrace.prototype.flow = function() {
       this.radius = this.radius * this.speed;
@@ -70,11 +68,16 @@
         return this.radius = this.minRadius;
       }
     };
-    TrailTrace.prototype.circle = function(x, y, r) {
+    TrailTrace.prototype.circle = function(x, y, r, max) {
       this.ctx.beginPath();
-      this.ctx.lineWidth = 2;
       this.ctx.strokeStyle = this.color;
-      this.ctx.fillStyle = "rgba(80,80,80,0.02)";
+      if (!max) {
+        this.ctx.lineWidth = 2;
+        this.ctx.fillStyle = "rgba(80,80,80,0.02)";
+      } else {
+        this.ctx.lineWidth = 0.5;
+        this.ctx.fillStyle = "rgba(80,80,80,0.00)";
+      }
       this.ctx.arc(x, y, r, 0, Math.PI * 2, false);
       this.ctx.stroke();
       this.ctx.fill();

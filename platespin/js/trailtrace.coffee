@@ -56,7 +56,8 @@ class root.TrailTrace
   draw: ->
     this.flow()
     this.stretch()
-    this.circle(@x, @y, @radius) unless @radius == @maxRadius
+
+    this.circle(@x, @y, @radius, @radius == @maxRadius)
 
   flow: ->
     @radius = @radius * @speed
@@ -68,12 +69,16 @@ class root.TrailTrace
     @radius = @radius / (1+strtch)
     @radius = @minRadius if @radius < @minRadius
 
-  circle: (x,y,r)->
+  circle: (x,y,r, max)->
     #AppReport("circle #{x},#{y},#{r}")
     @ctx.beginPath()
-    @ctx.lineWidth = 2
     @ctx.strokeStyle = @color 
-    @ctx.fillStyle = "rgba(80,80,80,0.02)"
+    unless max
+      @ctx.lineWidth = 2
+      @ctx.fillStyle = "rgba(80,80,80,0.02)"
+    else
+      @ctx.lineWidth = 0.5
+      @ctx.fillStyle = "rgba(80,80,80,0.00)"
     @ctx.arc(x, y, r, 0, Math.PI * 2, false)
     @ctx.stroke()
     @ctx.fill()

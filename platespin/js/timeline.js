@@ -102,7 +102,7 @@
       return this.chart.selectAll('*').remove();
     };
     TimeLine.prototype.animate = function() {
-      AppReport("Theta Replay");
+      AppReport("Replay");
       if (this.animationId != null) {
         clearInterval(this.animationId);
       }

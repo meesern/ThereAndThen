@@ -114,7 +114,7 @@ class root.TimeLine
     @chart.selectAll('*').remove()
 
   animate: ->
-    AppReport("Theta Replay")
+    AppReport("Replay")
     clearInterval(@animationId) if @animationId?
     this.ani_region_start()
     @animationId = setInterval(this.ani_frame, @animationInterval)

@@ -7,6 +7,9 @@
 #TODO tidy this so it's root= exports ? this and Trail is added to root namespace.  It will make more sense.
 Trail= exports ? this
 
+#Twiddle this to pick the aspect to count
+Trail.count_aspect = 1
+
 Trail.init = -> 
   canvas = document.createElement('canvas')
   Trail.maxY = 400.0
@@ -156,8 +159,8 @@ Trail.startReplay = ->
     Trail.getStructure()
   
 Trail.replayWithStructure = ->
-  #Bodge because aspect 0 is garbage
-  aspect = @aspects[1]
+  #Aspect 0 can be garbage
+  aspect = @aspects[Trail.count_aspect]
   AppReport("Starting replay for #{aspect}")
   replay_url = "replay-create/#{aspect}?start=1&rate=#{AppCtl.getRate()}&gapskip=#{AppCtl.getSkip()}" 
   Trail.putToCloud(replay_url,Trail.replayResponseHandler)
@@ -279,7 +282,7 @@ Trail.itemsCompleteHandler = (event) =>
 
 Trail.getHistory = ->
     #Change to skip the first if it is garbage!
-    @history_url = "counts/#{@aspects[0]}?grain=200" 
+    @history_url = "counts/#{@aspects[Trail.count_aspect]}?grain=200" 
     @history_level = "all"
     Trail.getFromCloud(@history_url, Trail.historyCompleteHandler)
 
